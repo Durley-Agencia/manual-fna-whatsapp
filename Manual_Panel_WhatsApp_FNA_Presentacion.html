@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Administracion BFF WhatsApp - Fondo Nacional del Ahorro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,560;9..144,650&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b2340;
+  --paper:#f2f4f7;
+  --paper-2:#ffffff;
+  --slate:#3d475e;
+  --slate-2:#5b6980;
+  --accent:#8f6120;
+  --accent-light:#f0c46e;
+  --accent-brand:#e0a24a;
+  --flag-yellow:#f5c518;
+  --flag-blue:#3b4a70;
+  --flag-red:#b93049;
+  --brick:#a13c2f;
+  --green:#2e7d53;
+  --line:rgba(11,35,64,0.14);
+  --line-light:rgba(255,255,255,0.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);line-height:1.55;-webkit-font-smoothing:antialiased;padding-top:56px;}
+h1,h2,h3,.serif{font-family:'Fraunces',serif;}
+::selection{background:var(--accent-light);color:var(--ink);}
+
+.section{min-height:100vh;padding:7vh 8vw 8vh 8vw;display:flex;flex-direction:column;justify-content:center;position:relative;border-bottom:1px solid var(--line);}
+.section.dark{background:var(--ink);color:#eef0f6;border-bottom:1px solid var(--line-light);}
+.section.dark .slate{color:#aab2c8;}
+.eyebrow-num{font-family:'Fraunces',serif;font-weight:450;font-size:0.95rem;color:var(--accent);letter-spacing:0.02em;margin-bottom:0.6rem;}
+.kicker{font-size:1.05rem;color:var(--slate);max-width:680px;}
+.section.dark .kicker{color:#c3c9dc;}
+h1{font-size:clamp(2.4rem,5.2vw,4.4rem);font-weight:560;line-height:1.06;letter-spacing:-0.01em;}
+h2{font-size:clamp(1.8rem,3.1vw,2.7rem);font-weight:560;line-height:1.12;letter-spacing:-0.01em;margin-bottom:0.9rem;}
+h3{font-size:1.2rem;font-weight:560;}
+p{color:var(--slate);}
+.section.dark p{color:#c3c9dc;}
+.max-w{max-width:760px;}
+
+.dotnav{position:fixed;right:1.8vw;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:9px;align-items:flex-end;max-height:88vh;overflow:visible;}
+.dotnav button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;justify-content:flex-end;}
+.dotnav .lbl{font-size:0.68rem;color:var(--ink);background:rgba(243,242,236,0.96);padding:3px 8px;border-radius:3px;opacity:0;transform:translateX(6px);transition:opacity .18s ease, transform .18s ease;white-space:nowrap;border:1px solid var(--line);}
+.dotnav button:hover .lbl{opacity:1;transform:translateX(0);}
+.dotnav .dot{width:6px;height:6px;border-radius:50%;background:rgba(19,32,60,0.28);transition:all .2s ease;flex-shrink:0;}
+.dotnav button.active .dot{background:var(--accent-brand);width:9px;height:9px;}
+.dotnav button.active .lbl{opacity:1;transform:translateX(0);color:var(--ink);font-weight:600;}
+
+.progress-rail{position:fixed;left:0;top:0;height:3px;width:100%;background:transparent;z-index:60;}
+.progress-fill{height:100%;background:var(--accent);width:0%;transition:width .1s linear;}
+
+.hero{background:var(--ink);color:#eef0f6;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:0.78rem;color:var(--accent-light);border:1px solid rgba(230,196,131,0.35);padding:6px 12px;border-radius:20px;margin-bottom:2rem;}
+.hero h1{margin:0.4rem 0 1.4rem 0;max-width:14ch;}
+.hero .sub{max-width:560px;font-size:1.15rem;color:#c3c9dc;margin-bottom:2.6rem;}
+.hero-stats{display:flex;gap:3.2rem;flex-wrap:wrap;margin-top:1rem;}
+.hero-stats div b{display:block;font-family:'Fraunces',serif;font-size:2.1rem;font-weight:560;color:#fff;}
+.hero-stats div span{font-size:0.82rem;color:#98a1ba;}
+.scroll-cue{position:absolute;bottom:2.4rem;left:8vw;font-size:0.78rem;color:#98a1ba;display:flex;align-items:center;gap:8px;}
+.scroll-cue .line{width:26px;height:1px;background:#98a1ba;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+@media(max-width:900px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+
+.card{background:var(--paper-2);border:1px solid var(--line);border-radius:6px;padding:1.4rem 1.5rem;}
+.card h3{margin-bottom:0.5rem;}
+.card p{font-size:0.9rem;}
+.section-scroll{max-height:78vh;overflow-y:auto;padding-right:0.6rem;}
+.section-scroll::-webkit-scrollbar{width:6px;}
+.section-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+
+.role-strip{display:flex;flex-wrap:wrap;gap:0.7rem;margin-top:2rem;}
+.role-pill{border:1px solid var(--line);border-radius:5px;padding:0.9rem 1.1rem;min-width:150px;flex:1;background:var(--paper-2);}
+.role-pill .rn{font-family:'Fraunces',serif;font-weight:560;font-size:1rem;margin-bottom:2px;}
+.role-pill .rd{font-size:0.78rem;color:var(--slate-2);}
+
+.stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1.2rem;margin-top:2.2rem;}
+@media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+.stat-box{border-left:3px solid var(--accent-brand);padding-left:1rem;}
+.stat-box .num{font-family:'Fraunces',serif;font-weight:560;font-size:2.4rem;line-height:1;color:var(--ink);}
+.section.dark .stat-box .num{color:#fff;}
+.stat-box .lab{font-size:0.8rem;color:var(--slate-2);margin-top:0.4rem;}
+
+table.matrix{width:100%;border-collapse:collapse;font-size:0.82rem;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+table.matrix th{text-align:left;font-weight:600;font-size:0.71rem;color:var(--slate-2);padding:0.55rem 0.5rem;border-bottom:1px solid var(--line);}
+table.matrix td{padding:0.5rem 0.5rem;border-bottom:1px solid var(--line);text-align:center;font-size:0.77rem;}
+table.matrix td:first-child, table.matrix th:first-child{text-align:left;font-weight:600;}
+table.matrix tr{cursor:pointer;transition:background .15s ease;}
+table.matrix tr:hover{background:rgba(182,136,59,0.08);}
+table.matrix tr.active{background:rgba(182,136,59,0.16);}
+table.matrix tr.active td:first-child{color:var(--accent);}
+.val-si{color:var(--green);font-weight:600;}
+.val-no{color:var(--slate-2);}
+.val-cond{color:var(--accent);font-weight:600;}
+.matrix-wrap{display:grid;grid-template-columns:1.35fr 1fr;gap:2rem;align-items:start;margin-top:1.8rem;}
+@media(max-width:1000px){.matrix-wrap{grid-template-columns:1fr;}}
+.role-detail{background:var(--ink);color:#eef0f6;border-radius:6px;padding:1.6rem;min-height:300px;position:sticky;top:2rem;}
+.role-detail h3{color:#fff;margin-bottom:0.3rem;}
+.role-detail .rd-sub{font-size:0.78rem;color:var(--accent-light);margin-bottom:0.9rem;}
+.role-detail ul{padding-left:1.1rem;font-size:0.85rem;color:#c3c9dc;}
+.role-detail ul li{margin-bottom:0.5rem;}
+
+.flow{display:flex;align-items:flex-start;gap:0;margin-top:2rem;flex-wrap:wrap;}
+.flow-node{display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;position:relative;padding:0 0.4rem;min-width:108px;}
+.flow-node .fc{width:15px;height:15px;border-radius:50%;border:2px solid var(--accent);background:var(--paper);margin-bottom:0.6rem;transition:all .2s ease;}
+.flow-node.active .fc{background:var(--accent);transform:scale(1.25);}
+.flow-node .fn{font-size:0.8rem;font-weight:600;}
+.flow-node.active .fn{color:var(--accent);}
+.flow-arrow{flex:1;height:2px;background:var(--line);margin-top:7px;min-width:16px;align-self:flex-start;}
+.flow-branch{display:flex;gap:1.2rem;margin-top:1.1rem;flex-wrap:wrap;}
+.flow-branch .flow-node .fc{border-color:var(--brick);}
+.flow-branch .flow-node.active .fc{background:var(--brick);}
+.flow-branch .flow-node.active .fn{color:var(--brick);}
+.flow-detail{margin-top:1.6rem;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;padding:1.3rem 1.5rem;min-height:110px;}
+.flow-detail .ft{font-family:'Fraunces',serif;font-weight:560;font-size:1.08rem;margin-bottom:0.4rem;}
+.flow-detail p{font-size:0.88rem;}
+
+table.transition{width:100%;border-collapse:collapse;font-size:0.76rem;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-top:1.4rem;}
+table.transition th{text-align:left;font-size:0.68rem;color:var(--slate-2);padding:0.5rem 0.6rem;border-bottom:1px solid var(--line);font-weight:600;}
+table.transition td{padding:0.5rem 0.6rem;border-bottom:1px solid var(--line);}
+table.transition tr:last-child td{border-bottom:none;}
+
+.tabs-nav{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:1.6rem;margin-bottom:1.4rem;}
+.tab-btn{all:unset;cursor:pointer;font-size:0.8rem;padding:0.5rem 0.95rem;border:1px solid var(--line);border-radius:20px;color:var(--slate);transition:all .15s ease;}
+.tab-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+table.limits{width:100%;border-collapse:collapse;font-size:0.83rem;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+table.limits th{text-align:left;font-size:0.7rem;color:var(--slate-2);padding:0.6rem 0.85rem;border-bottom:1px solid var(--line);font-weight:600;}
+table.limits td{padding:0.6rem 0.85rem;border-bottom:1px solid var(--line);vertical-align:top;}
+table.limits td.v{color:var(--accent);font-weight:600;white-space:nowrap;}
+table.limits tr:last-child td{border-bottom:none;}
+
+.gap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:1.8rem;}
+@media(max-width:900px){.gap-grid{grid-template-columns:1fr;}}
+.gap-card{border:1px solid var(--line);border-radius:6px;padding:1.2rem 1.3rem;background:var(--paper-2);cursor:pointer;transition:box-shadow .15s ease;}
+.gap-card:hover{box-shadow:0 4px 18px rgba(19,32,60,0.08);}
+.gap-status{display:inline-flex;align-items:center;gap:6px;font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:20px;margin-bottom:0.6rem;}
+.gap-status.covered{background:rgba(46,125,83,0.12);color:var(--green);}
+.gap-status.gap{background:rgba(156,74,54,0.12);color:var(--brick);}
+.gap-card h3{font-size:0.98rem;margin-bottom:0.3rem;}
+.gap-card .gd{font-size:0.83rem;color:var(--slate);max-height:0;overflow:hidden;transition:max-height .25s ease;}
+.gap-card.open .gd{max-height:220px;margin-top:0.5rem;}
+.gap-card .hint{font-size:0.7rem;color:var(--slate-2);margin-top:0.4rem;}
+
+/* accordion */
+.accordion{margin-top:1.8rem;display:flex;flex-direction:column;gap:0.6rem;}
+.acc-item{border:1px solid var(--line);border-radius:6px;background:var(--paper-2);overflow:hidden;}
+.acc-head{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;width:100%;padding:1rem 1.2rem;cursor:pointer;font-family:'Fraunces',serif;font-weight:560;font-size:1rem;}
+.acc-head .plus{font-family:'Inter';font-size:1.1rem;color:var(--accent);transition:transform .2s ease;flex-shrink:0;margin-left:1rem;}
+.acc-item.open .acc-head .plus{transform:rotate(45deg);}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+.acc-item.open .acc-body{max-height:2200px;}
+.acc-body-inner{padding:0 1.2rem 1.2rem 1.2rem;}
+.acc-body-inner p{font-size:0.85rem;margin-bottom:0.6rem;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;position:relative;padding-left:2.2rem;margin-bottom:0.7rem;font-size:0.85rem;color:var(--slate);}
+.step-list li::before{content:counter(step);position:absolute;left:0;top:0;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--paper);border:1px solid var(--accent);color:var(--accent);font-size:0.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'Inter';}
+.acc-tag{display:inline-block;font-size:0.68rem;color:var(--slate-2);border:1px solid var(--line);border-radius:3px;padding:1px 7px;margin-left:0.7rem;font-family:'Inter';font-weight:500;vertical-align:middle;}
+
+/* checklist */
+.checklist{list-style:none;margin-top:1.8rem;display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;}
+@media(max-width:900px){.checklist{grid-template-columns:1fr;}}
+.checklist li{display:flex;gap:0.7rem;font-size:0.87rem;background:var(--paper-2);border:1px solid var(--line);border-radius:5px;padding:0.75rem 0.9rem;color:var(--ink);}
+.checklist li .cn{color:var(--accent);font-family:'Fraunces',serif;font-weight:560;flex-shrink:0;}
+.section.dark .eyebrow-num{color:var(--accent-light);}
+.section.dark .stat-box .lab{color:#b7c0d4;}
+.section.dark .footer-src{color:#a7afc4;}
+
+/* glossary */
+.gloss-search{margin-top:1.8rem;}
+.gloss-search input{width:100%;max-width:420px;padding:0.7rem 1rem;border:1px solid var(--line);border-radius:5px;font-family:'Inter';font-size:0.9rem;background:var(--paper-2);color:var(--ink);}
+.gloss-search input:focus{outline:none;border-color:var(--accent);}
+.gloss-count{font-size:0.78rem;color:var(--slate-2);margin-top:0.5rem;}
+.gloss-grid{margin-top:1.2rem;display:grid;grid-template-columns:repeat(2,1fr);gap:0.8rem;max-height:52vh;overflow-y:auto;padding-right:0.5rem;}
+@media(max-width:900px){.gloss-grid{grid-template-columns:1fr;}}
+.gloss-grid::-webkit-scrollbar{width:6px;}
+.gloss-grid::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+.gloss-item{border-left:2px solid var(--line);padding-left:0.8rem;}
+.gloss-item .gt{font-family:'Fraunces',serif;font-weight:560;font-size:0.92rem;}
+.gloss-item .gd{font-size:0.8rem;color:var(--slate-2);margin-top:0.15rem;}
+.gloss-item.hidden{display:none;}
+
+/* domain table */
+table.domain{width:100%;border-collapse:collapse;font-size:0.85rem;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-top:1.8rem;}
+table.domain th{text-align:left;font-size:0.7rem;color:var(--slate-2);padding:0.65rem 0.9rem;border-bottom:1px solid var(--line);font-weight:600;}
+table.domain td{padding:0.65rem 0.9rem;border-bottom:1px solid var(--line);}
+table.domain td.n{color:var(--accent);font-weight:600;text-align:right;white-space:nowrap;}
+table.domain tr:last-child td{border-bottom:none;}
+table.domain tr:hover{background:rgba(182,136,59,0.06);}
+
+.closing-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.6rem;margin-top:2rem;}
+@media(max-width:900px){.closing-grid{grid-template-columns:1fr;}}
+.closing-grid ul{list-style:none;}
+.closing-grid li{padding:0.8rem 0;border-bottom:1px solid var(--line-light);display:flex;gap:0.9rem;font-size:0.92rem;color:#dfe2ec;}
+.closing-grid li b{color:var(--accent-light);font-family:'Fraunces',serif;font-weight:560;flex-shrink:0;}
+.footer-src{margin-top:2.2rem;font-size:0.76rem;color:#8891a8;border-top:1px solid var(--line-light);padding-top:1.2rem;}
+.version-table{width:100%;border-collapse:collapse;font-size:0.78rem;margin-top:1rem;color:#c3c9dc;}
+.version-table th{text-align:left;color:#8891a8;padding:0.4rem 0.8rem 0.4rem 0;border-bottom:1px solid var(--line-light);font-weight:600;font-size:0.68rem;}
+.version-table td{padding:0.4rem 0.8rem 0.4rem 0;border-bottom:1px solid var(--line-light);}
+
+.tricolor{display:flex;height:5px;width:64px;border-radius:2px;overflow:hidden;margin:1.4rem 0 0 0;}
+.tricolor span{flex:1;}
+.tricolor .y{background:var(--flag-yellow);}
+.tricolor .b{background:var(--flag-blue);}
+.tricolor .r{background:var(--flag-red);}
+.section.dark .tricolor{opacity:0.95;}
+.brand-bar{
+  position:fixed;top:0;left:0;right:0;z-index:55;height:56px;
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0 1.3rem;
+  background:rgba(11,35,64,0.96);
+  backdrop-filter:blur(6px);
+  box-shadow:0 1px 0 rgba(255,255,255,0.08);
+}
+.brand-bar img{height:30px;width:auto;display:block;}
+.brand-bar .chapter{
+  font-family:'Fraunces',serif;font-size:0.72rem;color:var(--ink);
+  background:rgba(255,255,255,0.88);border:1px solid var(--line);
+  padding:3px 10px;border-radius:20px;white-space:nowrap;
+}
+
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease, transform .5s ease;}
+.reveal.in-view{opacity:1;transform:translateY(0);}
+.card, .role-pill, .gap-card, .acc-item{transition:transform .18s ease, box-shadow .18s ease;}
+.card:hover, .gap-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(11,35,64,0.09);}
+.role-pill:hover{transform:translateY(-2px);border-color:var(--accent);}
+.acc-item:hover{border-color:var(--accent);}
+
+/* quiz */
+.quiz-wrap{margin-top:2rem;max-width:760px;}
+.quiz-progress{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:0.9rem;}
+.quiz-progress-fill{height:100%;background:var(--accent-brand);width:5%;transition:width .3s ease;}
+.quiz-meta{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--slate-2);margin-bottom:1rem;}
+.quiz-card{background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:1.6rem 1.7rem;min-height:220px;}
+.quiz-question{font-family:'Fraunces',serif;font-weight:560;font-size:1.15rem;margin-bottom:1.1rem;color:var(--ink);}
+.quiz-options{display:flex;flex-direction:column;gap:0.6rem;}
+.quiz-option{all:unset;box-sizing:border-box;display:flex;gap:0.7rem;align-items:flex-start;padding:0.75rem 0.9rem;border:1px solid var(--line);border-radius:6px;cursor:pointer;font-size:0.9rem;color:var(--ink);transition:all .15s ease;}
+.quiz-option:hover{border-color:var(--accent-brand);background:rgba(224,162,74,0.06);}
+.quiz-option .qletter{font-family:'Fraunces',serif;font-weight:600;color:var(--accent);flex-shrink:0;}
+.quiz-option.correct{border-color:var(--green);background:rgba(46,125,83,0.08);}
+.quiz-option.correct .qletter{color:var(--green);}
+.quiz-option.incorrect{border-color:var(--brick);background:rgba(161,60,47,0.08);}
+.quiz-option.incorrect .qletter{color:var(--brick);}
+.quiz-option.disabled{cursor:default;}
+.quiz-explain{margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--line);font-size:0.86rem;color:var(--slate);}
+.quiz-explain b{color:var(--ink);}
+.quiz-nav{display:flex;gap:0.8rem;margin-top:1.2rem;align-items:center;}
+.quiz-btn{all:unset;cursor:pointer;background:var(--ink);color:#fff;font-size:0.85rem;font-weight:600;padding:0.7rem 1.4rem;border-radius:6px;transition:opacity .15s ease;}
+.quiz-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.quiz-btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);}
+.quiz-result{text-align:center;padding:1.4rem 0;}
+.quiz-result .score-num{font-family:'Fraunces',serif;font-size:3rem;font-weight:560;color:var(--ink);}
+.quiz-result .score-lab{color:var(--slate-2);font-size:0.9rem;margin-top:0.3rem;}
+.quiz-result .score-msg{margin-top:1rem;font-size:0.95rem;color:var(--slate);max-width:460px;margin-left:auto;margin-right:auto;}
+
+@media(max-width:700px){
+  .dotnav .lbl{display:none;}
+  .section{padding:6vh 6vw 6vh 6vw;}
+  .section-scroll{max-height:none;}
+  .brand-bar .chapter{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-rail"><div class="progress-fill" id="progressFill"></div></div>
+<div class="brand-bar">
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJ4AAACoCAYAAAARplfLAACcmElEQVR42uz9d48k2ZLlCf4uUW6cOPfgkeSxelU93Ts9g939av2lBlhgFoMFZnd6mlQ9mix4OKfGTfm9d/9Qc4+IfJlZnPW0A4HIjHC3MDUVlSty5Jwjwjnn+L/I1193qUKIf+R3YP+ePy//m7kXmv8Lff3jB9a/9MD/l/Ml+e9f//3rv2e8f96M8fd9/X/p7++/B94/U2D+fcvZv2/gOWdB2L/b6zvJX/f2/3vg/W2C5QcKbvH9CsB9VJwLC07e30DhPr3x4sdujnBg6+8V+BKwiO//Q0ICEovECoEVEpzE++Q9/sD7s+5HA0tiMKYAYe5/2m6uU25+Xmr50bXK5tuc3Lwfi7iLPCewovket/leJz59Tz/4/sQP/dlHn6eTP/gCP/Tj/7oCz21+ieaXw2KxuM2lic2lSeSH77Wb4BIglKWuM0CitdrcbIOpawBMWeGHESgB1kJtNt9jsXVOVs0oyjWL5RpnLWEQY6qCOs8IPI8w8Gi1WlQW4p1DMGBlhCXECnUfquLud/fpnbFZhk5CXJE32SfQVOs1XpLg8hXTq7ek+ZysqFmnOUVpieOEKAio84zt4YDID/CVRkcJtLrNLTKAVmBzXFXi0EjPBx1Q2ybeERrrwBiHkgJvE7c4wFQgJXw/I7rNw2z59IERH4LfffSoyn/A4BP/pHCK/XBhTrAJOnuf9+TmliqaY0VacHdJRACepbIZxhikcGgpkAJwtvklgLqGMoUiZ71YML25ZrVaYURNLWtU6FHXBmsgDEOUA+oSrQSegKIosNIj6g6pvIhHn/+aEh9HiKkcCoUSoGUT35+kBGcBw/L2inanBb5mcXPF7fUVF+fv6XcUtcmJki5xp4sQGmcFti7JlgtWk1uSwEdgESj8oAU6IOoMGG1vQSDB05t8IanyGit9vCDGbfLx3VtRd0FSm82TIv4047kfgHjER9n2v5nA+/hYFHwUck0QSuQm8Pg08BxYAZW+ewmLpMbHARXYvAk2YZgdvebm/BhXrDFlRpmnRKFHezCi//AJQX8MOmhe0AvAWCjy5lNdLZhNJjgluZkvWVbw5Z/9OzInSZI+wnkoFFLoT2+AdTgMwhpQYLI1KvLJ5jecn55Q5hnO5nz52WOcM4hOH6QC67BFgXQWVxUIBdgas5yzXC7J8pLZKiU3ELc7dJI2w8EYv9e/Dz50CCjK2qFV0Dy+QiCEwBkwxqD1JtuJ72UB9+k9+ST4/psKvI/iz36/PPoI27kPPPdp4KXOorVEYxEYMCl1uiCdX5Mtb7g6fUu+vMWzOf12SCvwMHUKtsLpmOTgM1Qyxg9i/LgDYYxdrchXS0KtKNMVdV2itWaZ5VxNl8T9Ab3xHt3BNlIEm3fXPCDOSSxu89+GLF3RbsVAjc2XvHrxDVpYRsMundGIyzeviFsJSaePcbBcZ4SRT9zvAAYWE3AF5GkTKJ7PYrHg7HpCUTnqwhD4CUnSotMbMBxtQdIBFKYwOCcR0kcojVTefc1mNyeG+H4J5z7+5O0nZdDHRy3/6mu8H3nAfhpQbI5QISyBKxHG4WxNlacsZ1dMrk9YTa+p8jmRdrRjja9CAk/ghY7AeWTrjNnihvVpQupu0UGLnd1DknaPm5sJi9mEJAyJPImWjsntNaOtMaNOyOnZe/a3x8hqDjoGJ7FOYZzEyQCkQgoJQhG32jgMWbpmMb1inU758vljfOlIb06pioxCeRizYJUX1M7iBwPMasV0csG3f/hLQg88YUjaMe1en7yuqUwK0qPVbrFaLlmupsznE9bLGb3BkE5/jApbmwxmmk/ZAiK4/3CLyuH74tPPW2waOffx8fq9xuMfCfbV/7RBZz+qKOSPZvn734VpMgEOQYmnKshT8vWCdDHn9vKM66sznClpt32ePHqANQVluqLMFxRIgkjheTGxV1ErH1VYTF1RliW6qEizguW6wNaGqN8mW6ecn57Qa0X0kohrW+BHEkwGng/SQ+KQTlBjMUJRffSeNRKpFb7v43mKsN+muDzn/euXPHzwjOUq5+r2lkWaEcYtoiRkNst4/+Y7ut0unrK4OqOscmazCaV1oDw6nTbCaALPp6oMeZpxdfGexeyK0XjGcLCFN9wG4YHT2KrEKYHSTUGiPPFJd3qX5xybnuNHMsJP/NW/jsD7tINVP5q6P9QRTdAJDFADOVQzuD2lXixwZYFMb/HqNf3hgCfPnlOWJdKLiXs7+FEIQpNlK+bzJbVYsN1tEwYxeDE67ELSpdMdslgsUK7m9bd/pFhPyFdLJlcXjMYDYlVBvW7ecyZARaB8UBIlJBaBQ2Ac1LUh9CD0Y3Snw5mxUFaUxRpfCnytwBmSKGK0tUV7MCDq9QHDsN/G5CtstSZfzUBY4lYHI6CqwQ9D5tMF460tlITzk1Om1RrlKrLFhHfTCQ9MTZD0IGwhZYC1pjlmZdNbfL+k+ST4fuI8FZ/81L/Ko9Z9r72VnyTwO9ikOTIsiLoJOmHBltiLdywuj0mLAu0FaGqiwGM02sLfe4CPgqxsapu4DRaKYkrlt2mPtjh+/xUP9rYJvZg8ywi9CJEkdKMIyozxaEAVSzqHO9g6pUoXmHxFcfIaqSPmhYcIugStHkGrh4w8pApRNN215wUYW1BUJa4yFFkOZYktKnxPcfzuNQbB1sEjOg8fAYo6XVPkOc4ItAqYLZYsFgVJEpEkQyrruD4+53Z6yi9+9iXh1gjyFGsqfCXZ3R6jlMfp+TVvXr5ge/+Qwd4TCATSgnUVwnlYcQcDfcAPPgk+sfn83Y8Vc/Zfx1F717Pc/y4seVUQ+MGH63IWgaSuDWVeEIc+QkvA4EyGkA6EYT2fMrt6T3lzzLDl4UvB1WROELX45c9+hervwKoCP4SwRbGsCEQPtKJCsrM/wCOlpwy+b5gvVnQPnm66WwtFBqHH3v4uRAfcfPWXHL15wbDf4er8iDxb4GTEsgqpXIzTIb/8t/8Tw3BIlmf4YUK1uS2BDMiKFR4CUxrKdY4QCulAUuGkoDPqADUmzdFxCx23WVxfsFxV7Ow8Ynuwi+h2QSi81Zpnn+8xvLmgrnOyizOibpdHv/41+ekZ794d4fshT5484vzilsnNLbN5xmjvAZ2tfaSAqipQnkZgKW1NVdWEno+S3qYxgrKs8DzvPgGITRT+Y01D1H/4D//hP/yTJDvh0Fo3AEhdgTUopZAClHL4vkIIR50tscUaFWpwNefH7zg5eU+erjh4cMjlZMLlbE1/vMfB48/QnRH4LQg6UFrwWmg0thRYI4nDFlpJyuWCxe0xCkNWGqqioC5K/FYL8hXUVYOTrWecv31Bvp5T1RlhGICzSC8gjoeEcZeitjgEvf6IMGnhrKSuDFjwlSMINFpalpMbNIaqyNHSUZuS4WiAJz2E9pHax1Y1Z8en5GlBN+lgrUM4jWz1QIQInQABkRdQFUuKbM16vsBlOWEU0+n2Kcqad+9P+OJXfw4ILq9uub6+IfA84naCUgKBIV3PiAIPXyusNeR5jpIKKRVaq/uRnLir+xCb392/5uZCbjJghRYSrZon0NUlztZNq1HX6MgH4ZheHPH+/VvKsmQ8HjLefkTY7TK9WDDHY2vwGG/8GIBylSJcQVXUxLIEL0RmRVMnqhBmS+ZXx7z85ms63Qjr+azTkrjd48+6bZazCZFy6GELVjOkMLTaIWm64smTJ6A9unuPQQ7B7zK/mfHu5JKr0/ccPPZRKiT2FWWRI9DgKqgrhoMey9kVWtTEvqIuC1qRz/nlCUOhCLpjlsuUb759wdZozOtvX1FlKXtb2zx8WNHa3m+wxtpC0qXdfoi5PeXt27ccLc7Y3T9k9+CQIDPcvj7m5PiUg0fPGRw84fzomKP3rzk7Pebg4IDB/h5J4uHqFdYptBei4xBrDM4KpNSfFkSCHx8//msKPOGgrCp8XyOUQ+CwVQauRlJvgsRSLyacnp5ycXFGGIZ8+fwZ7fEYlEfuPIaHXxL113idHoYIhWW2mnB5esre1g7L6YRRr0uZZvhaoVpt0ttLIlny5S++RGqJ8kKOTs+wFlyRcnH6Dp8a82IO1Zr9nTG+t8V8OaO7NSIvq6ajDUPwI7qtNuM8I1vNoFhRk2GsI+i2oc6gTDH5ktGwx/zmBKUFtXNYV1MUBZPrG3rjA9xm1Ke1JgxDfvazn7GcT9kejgl9H6oCpCCdzogTD9ycujTgNEVlWa1LnPXoDfd4/NzhhR3wA1CK3YM9osBnMZswvzyhXN2w8+QR1BYpvM0EBKTysMZQFBWeF+DuspoT/yiZ7p+lufC9u/quIk2XhJ5F+qJBifOUm/MTrq+uqKqKR4c7bI13EV7QjH10CATsbD1BbNVYV+FQOMD3PcLQZ3p7zsnb17Qjn9CT+FKiJZRFxuHjh/SfPgFjQPs8i2KWixnCVWTLCdKHxHPMl0tWSzg9PcEIQS8rGO3sEioBoQfpCuKYOIDry0tctY/uDdDrtGlqXAWqRsUKlKQ2BWEQIoRAa81qsW4yc9yiri1JkvDll1/SihOSTkJ/FiGs4f3716RpStxqc3szR2mHK1d0WhFhq8Pjx1/Q7o8RyQBPezyJB4gggLqmXq/RWtHb36aXeFydH1Osp5x+t2L/4RNoBWDLJrD9FlJplP3Qwbp/AprmP+lRKzbp2xhHoBXSa4Iwn5xx9O4V2WpBt9vl0eE+UdLBVSVFXhAECcgATzucsJvRo8a6AluXdJOQ3rOHpPMbPJGRhJpBv4N0NZPrK7J1hfQM+c0V0gvxY4HfimjbEltlKOnwlWB2e4EnDYGv6PbaDHf2KJ1kkRUc//4P/OxzhalBJXt02yG2WnL0+o88fPwYpCQ7OSdqxdBtNxdaFeTFil6/he8psrkkTfP7Y60sS5TQbB/sNcwZKfBin9X0mrycI7Wj1w8Ybx2CdVydHOPpgE57QG/3EOIOCI0zDvyAuq4QTqK9ELQFU1JncwJZ0x+2uVksOH73gm5vRGf7EPwYl6+x0kcHCc7+UNBJ/v6U/X/mjGcqsNbhawm+hmLN9cU7bi6PSFdTnj4+xFrD5cUJy1VOrz3i4PAJOJgcHzPYfwguaz4I6VD3/X8FruLq4pi45aO0gKABq12iyCvLb178kSfPf8l4q9tUz0GIXC3IlkuEKUkXKeNRj+G4z/L2mqqqWOcZQWdAqEMqPP7f/9v/ysHBAw6LNcnOLr/85TO++eYb/uP//hLnHP3ekHavRb/fJzk4IL06p6pykiTEE2BqR6sVkfmKYpVhlM9yNmM7jnC2hqqgyOdc35zg+TWtdkKUOOJOQLUuefb8GatFjpM+OAVoTOnIjEN5AomHMwVZmqFsSuQZTJ2xnF1zeZYy3t/j8uaW9WIJTtLZ2kOgEVb9k9Ph/pZdbTPWvyd/ub9+gNdkqGY6q3A4kyKFAZNzcvyGN2++Q3uSn/3sc4SUXF5ecnJ2zmK5Zp0WzOYLnHMMB32kVqAFuBqKdUMP8UQTwGfHLOa3bG0NKIqMLEuRUtDpdOkPhtzczjk7vySJE8p8TYQlW82p8jW2SDFVRhz4xM+esj49Zb5ccztbYVEY45AOOqEmEIY//u6v6Aaa5MlD+tIxubkAk5Etr1lPL5jdntHTlun1FXmx5uHDAwBW0wVbWzuUxqC9gCiOmcyn+L7C2YrJzTmL6Q1nZyd0O222hiOcA096zCczirRguVxRmho/CNBBhBQCJTS+9imLjCj0wRTMbq+YXp1xc3XOzfUl0+mUrKh49OQZ3W6fV2/fMr25YXxwiAh8ltMpQRh8aC+kuJup3Q9wxT9ozf83JglsqEf36Vf+6SxFNCWUBbRufqampi4LtLB4pgRXYqzh9evvODk94vnnTzl88ojZzSUnJyeMhwPiMCRLC7J1znqxxBhHK4oxRU6gPba2dtB+QFlXRMMhVAW//+1/RSpHbXIePzgkywr63QGeFyDxWK1XLPMlX3/7FVvjIb/8iz/nze9+gylSbJkzubngF198hrSGm5sr9vcPmc4WCK3541dfcbi3TTm/QCtBjiZs93n+P/8/m8/k5pLf/Nf/E1GntKOAuiooyprx/mN2v/g5WI+jowuyRcHnX/ycF29es71/gIoC3hy/58nTpyzWK96+eksUhLSTDo8OH+P5CTjF8et3HD4+5NWL3yI9SZ7XDEfbbD//GRSO5XRJezjm+vwc4QxBqJnPbijyJXGowFUkSUJVw2KV0el06PT6XN9MuLq5Zby1x/6zz3GlwckAK4KmflY+cjPyMBZ8+WNjNfs3Lrf+bkftXX/tfgw0BqWaBjXNUrQG7SlCX5PnU7xQ4KYzvvvuW7Ky4M//7BfErRbpfElvtIcfJJR5hvI8th7uAjB5/57j90ekWYmqDctpytXVBVKH9PsDHsUxTjiCIOD07Ig48VksVrRaLUxpCZRHlRta/R302uPh4SOqImN9eUUUxfhJzO31FVKHXN7M8ZTD0RAx5XzOsNfh5589I51fM+jGZPmS1WxJKWnoWK0WiA6Hu10u3l9DvkQZS4SGYs7q9IiV0dzeLnj08HNu5zOCOKI7HrCeLwmVh698ynWFp0KeP/sZ7Va3aVSkR3ozodVqcXV+ThBHXN9esFrlDIZDsDXTy3NOTy/ZSVfMpnOm01uMrbBU7O3usPvgYUMeDALISlqrFUEQQBjSytbkmY8pl9wcvWR0+BiqDK0F6AhwZJXDOkng/8POLv6WNZ74dHIsvld3bsawSkGifSqTUpRrAl8ThQH51Tvev/oOcDx79IBWHKCUxAnJ+uaKyWTCzs4OXhw1BaGSDHa26MY+ZVlS5gVVaZnOVsyWK9KyIi1K4q0hn/+b/wEv8kizJaeXV+wISS8JibXH9eyW3Tgm3HnA4yDhD7/9Dd98e8TWaMDuwwM6vSEPHj3mzYtvSNptPGmgG1Ecp5SVz3i3y+ubN/S2tgnXPrPsGltXcH0BeQOheM7gY5DOoqTACEGaptSzBbo9Yu/gkO5Wnxcv39IfbkFnRHqxwtYJ84nh/HjB9vZD2uNHUGVcHL9lPOxhvTXdbshf/dW33E6XPHr0hMdPt+kPxuD5eIGPdY6Ts2OSpM2DRw/ZOdjbUNkNRMEGltHgUqoiA1sRxAGdnSFJ4HF2ecGbl1+znM/Y2TskGgdAgasKlJWEfnQ/X//hQaj8QaLHP1DgffTiTv4JEd85EHfvTVRAjadkczQVK0y24Pj1tyhqnj58jFSal99+Q+BHdHp9Ts/OSJIET/vNh7ScNh9cEqMGXaKqJEpL6A0Z4UFeNf+g9sAa8DRPfvZzzo7fMlusmEznRGGHRbomrytEFENhEUazvXWAkI7t7S0YdPDqHtycEfeHbO2OWc2voMgoywUXFzMOd0f4nkEIR9Tt0E1LFnnG8dtXICyhsKSzK5QpiTwNTrAsCgwl7SBg68Fj2Dnk4rvXLArDXmsAVqF0RL8XYgqFcgGRlzSfredTVhlXk5RWO2CWzVkWUx4//YLPvvhVM4cuCygrWttb/Ko3aEZ/UQJp2tRnxkKcNPFiLKxyCCPq/JTbyznBzQVCCKSEdhTRe/aI90cn3AjLoC5JOgNE0MIPAiDH1YD2cT8RMj9UBf5YG/C3zHjynkbjPjpehaNh1tqGNlxkc6pyTaubILDk6ynf/uEv2Wn5PH74mGy15qs/vGKVlng65Pbqlk6nx2qy4Ov/+lcEvqbTTeh1YsrpFVVZEEQh0e4jMDXkBUgPotaG7m6gLEEL4naLh48fcX19Q2kNs8sLAi+COIbSYirL7s4h+N6GaapBhcyzmvZghPR9zi5OSVcKXMlqccNUp7RC0Tx7XgBYnDFMb68QpiRUDlGtkXWOqDWVcZhKEvdiRlsbsuay5PX7K9r9MVF7DLVisPcAvBB7fUvsK+aLKcyvYNxhd7vPNy//iPRGnJwf0R70+OyXv8bkEjuZ4yUxhH5zAzzbzKlxWFFTZinL5Ro1U8Rxi9lshi0ztCuY3V7gnKMsYHJ7zXq9ZmtrzP7hIZ89PeT49Jyj11MOHjymffi4qWErg7MSqXs/gvHJH+Vcfnw8i79r4H0sprr7A+fMhopuQUny1RSlLa1uAnXG6ck7ZvMbtkdd9vptbq8umM+XhGFIK+nRbvWIki5CSN6+fYuTsJqvmE2uOdcgpEEIS9xqsx+2WGcVoPDDFn5Vo7wAFXoQhEBNt9ul2+1iraXVilmtUharOSdf/YGD/UeU6RpPCvIixeCITYTotJDKJ4418+U119fXFEvLqCWR1ZrZ5YwwjOgfPGmmBkWBcAZhSnwNss6RJifyQLma2jjCIGEwGCBbPdLbGd8dv8GKmP2DL/CSPuQZJGEzufEKOp2mMzt6+0cecMDk9ob1ek0cP0H7CQcHz7CFQ/kJqt3bUMUs1BUuX5PNrijLEoEiCAKy9YLbmxnGONI0JwwU7RDKrGkutkZDtsZDZre3rNYLXr38loPDQ3rtkKp2XJ0fsVzN2Tt8DK1OM+1w1Y/gfOaecv9DEpsfos7rv03Q2Y/0EvKeNm1xzjSaA+fQ0qE9BdTMJhccH70iiXweP3nOzdkRb968Zntrj5/98nNsCbIzhiCG2ZJfD3egFWEn17x7/4oiWzUTIA1CKV6+/AYrNAf7j2l1WqzmaxY3VwitsK5i/9FBc/GeZG93jBCK0Nvjzav3vH75LZOjd4yHIzy9Q1GWdB89aDLfasnV5TnDXsTk8oJ+p01Ll9h8hqwKhCuoqxpmEwjaOFsTBh6FrfClA1PgURNpgbCuSaKepigqzNUNcxNRlvDg4ZcMh4dgcpypEEUO6YR0fk5dLEmSmO+++wPLxRFOh+yN92gPDnmuR0RhB1d5m2A1VJNbrq8v6HRjWv02sdDc3pwzmUwo85o8K2m3++xubVEUBuEqHn/+hGxySZqtMM7S7ffpPn0CRcr0+D0vX7/i4YPHtNod1nnG9eUZ1loOHjyCzmhDyHXNNI2PBU7yXjXzY7Ej/r4A8l2yM1ika4iaAgOuwuQFOvahznj9x9+zWk94/GCfONCcnR7z7tVrdrZ26I/GgESOhmA1FBX0+lCWrE4vWS6nHBw+xt8eQr6iXk7RoWSdrfn2uxe8fvUdFxcXLOY5VkCUxGTZmtnkit3dLQa7Y7xOB7dcobeGHOYFsZacvX7Bo/0h6fKK96fn/NnhVvNEVhnCWo7eviGbX/HL5/vEIuPsxSXaGAatBIvg6z9+xfbBE5wzxGFMna9wpkRhiCMPk6+RCJQKyKuK67Mzyqmlvf8Zjx8/pzfaBwH1eomWBaymrKYnuHLBcn6NqyJsMSfqD+gMxoye/hxkm3i4TX474+j1G7J0RRBoolixThdcnL5Be6C1pKxyup0+j7/8EryoYSMrD7NoMM10OiVKWujA5+bqgtV6wZ6nIAoIopDHj55ydHJMFM14/vkXlJXg2xevmM3n/PzX/w4RRyDqj2htTWN4F3zyJ4Lvby51+IGvsio/UKddTW0KpGpEJHVdoYIm7b5/+Q231xc8f/SYYa/L2zeveP36NePdXby4A17Y1EpONWorPwQks/NLXrx6Q2HA396Foub28hYjfeiNCLTH4e427cjHVhVb4yGHe/t0ooRWHGHrmtP370AIpkdvEZEPeUorDniwv8Wg63N0/DVvXv+BOHKwvgEKJAV1sWQ1vaUTR5gswzt4gDYQCp/1dImswFOCm9tL6jKn04p5+uwxWsmGv2YdcRyTZY38EiSddo/PPvuMRw8fs7W7RV3OKFZnaJmRLc45evMVZ8evOD95y+3lGe/evCH0Q0I/ZDTcBa8FIoRlzfI25eTdeyLfpyoyLs7O8LWk122DM3ha4AnHg/0daEeY1ZRiegUY1KCPwPHy5UsuLq/wkjZbO3vkteHs6BhWa+J2F6k9Rls7rPKcF2/e4kUxz7/4gsrBf/zP/4k8XVCVGRKoy6LpYeocJQRVVXyM8H4SWOLvO7mQSlDVBWWVEXkeWknSdIHCoUNNNp/x4uvfUhQpz589BWv46o+/J08zHj56hPZCesNt2t3eRmQims40y1jeXHNxec7zz54xevqE/OaG7775BisESadLuVgQbg8JnCFNC9KsxBhJEIYMhwN2trcRWNbpmn4ccX5+hqodVydnnB6fMr29pi5WaAnG1TgJo9EI0U6gLrk8ek+oBHujPr4zBKMe/u0Nqq6QpqY2Bqd9rISiaADZuN8n1hJhK9arGXVZoaTCKY+8VnR3HtB7+nOUjlisU/JsTlXO+OoP/5nXL/9I5AtsWTG5viUMYnqdLfK8aUzLSiErSeA8ysKwWq1REr788nO293cJPEVZZizmc6ytGA8GbO/ssFosUUWB1+tCUfH+xXfY+Yz4cI9hK2a2WkJdE4+H9DstEA6lFTKKkc4RxjEWydn5NZdXN/QGI7Z2dikry+vX7wh8n063S5mnzUMnBFKKBsOVn7YR3+e3/J2aC7FpIEKtMMpibI6WgjiOMWXGejbl8uKUPM959GCfOI755o+/oygqnjx+Sqfb5/X7Y4Reg9CEfoQfywYO9wLayvI0fsh6vWb19iUg2Tt8QJwkzOdz3rx5ifmrCe0koN/b5snjQ5LWEBVEG5W8JSpK0uNTXr8+4eL8Cls1UsT+YMzOuEc6vyQKPeaLJdeTKZPZlNFoCMbQjnwqVzLodTh/c0r7MsLzfEoUfhCTlQVaOYSnGkyxyMDUeEGIDmMqKwl8ha89SqswFQghsfM5V9kSpz1uJkf0+jEPDjroB0NC4TO7nRHoIcPhNt1Hz3iwLqhyw2Sx5t37M4o3J6gg3owNRxBHEPqMOwljV1FcnXF6esQqLXn//hvKsmTQ6/MERdjp8uDBAWVZY24u8FptxmaA76kmJDpd2p02FBnFbEZV1UymczqdHj//+YhXb494/faIp88/4+mzz6i+fcH15QkSw2AwRCgwWYbyHJ4ONg2PbE6yj5wX/loc76enZ46qzvA9jRYO6zaiV1tzfXnKuzdv6PdaPH30kN54xMmbV1xe3PD8+VN2nv+M4uYGZwWTyYz5dIaUklArtNbgLNZatAo4O7vAIdk/PCSkxfHNCWVt2Nnex1QJ7XbCoL+Lbg8bueEdsCksvb0Wz0zjTlBUlrg1JPB9hoMxst+mtbUF1AyyglX9HVfXE4x9SSuK6Ha7FMohe13m8znJqUNkObM0pRt6SM8hsfiexMQBnqco05TFbEqVV+iojedLpJCIWqA9wWqZcv7NNyxszM///Ff0hw+4vDqh29/F1pL//B9/izOa/+HX/552bxuSbUg0npBsLxdU+ph1sSZKEnzfZ+fhExAas1rgnEV3E4KdhzzpDKizNVHcR0pYr5Z88/IN7SRiPB5TFAXnb14QBAGdTos4CjCTC7RWJElEmqacnp5y+PARi8WCuNVj69lzwrDDf/nN73j39oQ/+7Mhv/rll7x8+ZLTo7dUZc7hgUZL0TRKUgJqo90VGzZzIyQXP9BdfDKr/cnAEzWCGuvKjWJJkC5nnBy9Y7lcEAYeh/t7dHod6nTN+6N3iNry6PEDZK8HaUqZZSgtWMymnF+cYIqUdifBU4o0W/H+3QlRlBAEHZQXomSI58eMxnuM97Yg2VB0TCPhw/ogdJPx5J3XRbFhJU/xddBcsb57vpppCEXB7fkJN9eX2DIn9ByBtLRDTXt/zNf/6/9CL9ZEynB+9IZuEqKlw7oC7XnkKLYPHqHDhKOjI4r1Al+BV1fEUYB1ismyhtaYNS1K1eVX//YvMCLlD3/8DVrFBF6Hs7MZW+ND/vwv/idE0AY/hqIA5YHfIANoAcLgyhLhJ83NtBZTZCi5IU3cibDvBFLpitnNJddXZywWc6qqQLgKURZoaZHC4XkeYRgiBFRVhUPw8MlzpA4QKsDvDsGLuD664Ha6ZDDqs7U3BltzdnrO9aY8ePb5F6ikgysMQjU6Y9BN4e90A2b/dYFn7U9YaFEjZLlJp47pzRVnJydkWcp4NGB/dwcdxaCgms5YLpcMdvea+ZkzjabBlBB54GqOfveXVMWKJ08PEbHP4uKC6+tbkriDkhFR1Ke1/QCiDhgNSmHyGSiNUgl4MbjGsqGuDJUpKYs17U6IlIDdGNXcWew4gTUVzjVIlJA15CumN+dMLo/J5le0A8HOqMWLr/6K7UGLXhJw/O4lGkOoHORLalOSC5+nX/wChrtcvn3HzdUlrsxRtmTcG4CUnFxOCXsH9HefMqs8VNhini7wwwBEyGi8w+6TL0EnzbMSxM1DZNmUDhsemXCNILvMyIuaOI7xVPDhHKprbG1A2IZ1E30UtFSU8xvW6QJV59y8e0EgDNPplOVyzrDXp9PvYS2UxiKUz8Nf/TlEXSgdBG0wgnK+xk+izWw6AgeLi0vevH5Pu9NjuLVLb2sbrHevLr4PQD4yCxJ/JzjFURcp2pesZjPOTo4p84LDgz22d3bBU40AtKioKkO73W1GX3lBtljgacnZ6TtGgzZ1sWR2c8F6PcUUt/ieYLGc8eTxM1rDISRD8NrgPFguMKlBjcaoZHCn5cI5jXUbsZ6n8PwIP4o27LwSUNiyarx+tIexornJG/RRUUMS0Y/aKAm3rmJ2e0qWTamcxYtD/EGXZNEjXS6wskYKi8RRFTmLxYJO1EUoDz+MSKsK3w+phCTQIUGUEMcx2zs7JLXmem754vkvSLYPsVlK5Sx4HUCwqhe0ooDMlAih8DZWGevSgJO04wTtJyR+TeEq8qKppYSDIEjQurmnUdACDHW5IktX+J4j6I7wuz2wK9TqmiSAUNa4YomyJa5YkxcVZWWpjGB1dERrvAdWUbsM7Uf4QcS9bVe2BAOdrTHDyZTr2wmrVYrv+8Tt4b2lWlPn2Y9MSf5WGe/D/wtRIUTGybvvuLy8JIli9na36XS7DcIrBawzvvr9H5BS8uUXX5CmKX/4wx9wVvDZ88e8ffUVgpIwUISRoixSlsspvha0e126nQHDrT3yZc3l1RTnAmqrKEqLF8V43Q5Ru0u3NyaMeggZUG2Mfe5Ey8ZCUabEYXhvJ+ZwWFQzVfObj6HKajxZonwL1ZJicszp2z+ynJyj6gWPD7dIhgmTty+4vjwlEjVBucL3FNfLiqAzJOptkZcVxhiqPCVSYExFrzuixMfr7tJ/9heQjMG1QI+b7L2RbRpqVBBAA783JYIzSOGj0IBC3f25AZSlosTD33gIWpyxeEJSlSmBpymrFdaUmCplsbxhtZ4SBB473RZ+p9X4s8ymIBtF3zfffM1iseDxk6dYIalqqCrBzWSJ9Fr8+s//b4RJh9/95jc8fvYIQ8lqtWAw6LNOl2ituby+xTrNz//NvwcZAD7gNTiibOw97l2ofoyPV9c1UkqkhKoukFKgpKI2K9L1Ob/73X9ib3uHp599SXp7w2o2Z9Dr44zl97/5Pc452u023W6X9XrN5eUltYPRoMPjB9tIYQjaLYrlnJOzU9rdPkmry9HJBdYojJUIoQn8qDlWfIVxNcaUXFye4Ychne6I8fY+rdE+tobKanw/pt5wVDfl7Sf0RYnE1nea0TsVleHebcqlQM43/7//F7u9kECsKGZX9A5HvPo//j90Qol2Oes8oyaidB5GBmzv7RF5ipOjN4S+wPN98BLmtcfO839H7+f/M7guZeXjywSswDiLEA4pJU5+OH/EHRzhPiJj3PWG0pJjsEBRZyQ6wKOmzNYEkQ9VDlpx/O0fubo+RwjT3D8t0VqSrQvaeotQheztDJnNLphOz/FVjTMpuzsjOtvbZLe3XJzfkq5LAr+D77fI85r5Yg3S5/DhAU6sWS4vCWOD50vqum6+r9LsH36BHj8CGYPwsHXjB6Y9/xOET3+fT+fcnYj3TvfaqKOWyymL2TUHO1u0kojJ2VuO3xxxeXFBO2mxPdriweEuJydnXF2eI6Xk4cPHPP38C6qqoq4yfGqur08wt7eUpmaxLvETxdZgjy8Hj7C1t1FA+c3RLR2IsgkMW3B4uMXF+Qnn56fk2YpnQYDXHhAA63RGGHWwdzfr3hrpw3P1JxZxQiGcbZ5M4WMWM5L2mN444eTbvySf3aLKJVQGvxVQVRlCCJSSaBRaaXwp8QQEWuNJy3w+R8YQ9x8Qd4bgArLaQ/k9jJWbFGxACJwQnzI6PvHZ41MnVEDgARZPec3tcxblanAKs5zz8tuvKMqUUa/D/sEuOgyb15ISRMT1ec7kas7lrETrDo8+GxMHlndvvuHtyQXh9YS6KAnDiMfPnhMPdqASLG8XtFo5SdxnnU65vj0HsUAJSFcrlFJ0WxHL5ZrpzTkjv43o+A1pwQqsVFSmxlP+D9d4xtgP3mof3bAsy7i+vGQ5OWPYi1hPJpiqZNjr0o4jnDF0ux2GO7uMdnYBjfB88KNGDa80nnRkp6+5ma5xwjLe2aY33iNO2hBEYBXSD5vawNKwTVy5YV6IptPTbXai5wgRsVhmXJ5dsv+whQijDWfswxMlfgg3F3w6ZwSsUEinAEVhLMLTGGO5nS+Ileby9pa8rkFKjKmRUiBUc4g7Ca6ucEKThBFZvqQqLL4nEM6HWoFVBHyQDVoBSih+UKB/TzWTn771T6wlJIqo6T1qi1YJlI6b6znpuuZnX/yCcHu7+QG1OeKcg1XB+OEW/c4UZ0ukMqh+MwJ7Emuq9YIsW3NycsZ0XRAbQRx3IO7QHu3Rtg021705I2xbgqDE82uurk+ZTCacnt+ggwG3szVht6Ld1yA8tND3fq8/iuM1QSdxzlHVTQcY+A0bYzGbk83XhLYmiQJG/SHd3W3wfSjrezuIRtC8ARGVD8rH1WDylKgzxo9OSfM1yovpj3capRQKm5ZIfQd9yA/dULnCzOZUZYYpSpLugH63R1ULLi8viVpDhjttlAqw7kMV4b53rfYThfynLjV33slRHFM7x+u37zAOtnf2qNYB10VKVhRYZwkCjVCavHKUZUm2WqLikCSKWa8WxFGCH7dZz1fcnF+zt+OQgUddmuZYVeDEhl7mPjB9hIAfc4sQfJC5VLkl8CRSbaAT7ajmt1ycH9Fp+yhtsbMr0jQjaXcR7VYT7a0ITI7uhyDD5qGu8kbmqCO8QczV27eEvR16OwnDrT3oDJoQcaahnrkKtvoMthqOHjbjoJUQxLfMFhmV0UxmS/xkSmtYYqQD7VCeR1YVRF70w+yUJvA+YHp35Z/neURRQpsRHV+x++gQum3ysxNubm5odRK6/SHCCyHwmgq+EtRGoIWH8AK0DoCI/UefcXJyxOnlhNmqYLS1Tb+/hfRjkB42zcnWS/I8paqW1OWaslxQljkXx5fs7u6B9Klqx2K2QkvV0LOqEqH9e86g3ESfEB/Rc37g5n6sFxBhSKfT4Y8vfkMsQGiP4eOnmHLNanZKKARh6COUT20MhSlJVwt8Cf3hkE7aYZ1XSKEp84rJ9Q27t1PE9hgtHE66D10f4Db+YG5TdLq/hvgtsSi5QEkaYobOwGTc3H7L9fQb/O0xX33zjtlsRhAmjLd3EdLH8wJ29w7xonZT/AvV1B0qwq0qVqucxWrJm9Nbnj5/zt7D55tPUFE6g9UeWgm0yRuYytSU01smt5fUdU3gtxiMRjiRUIsFfthBSB+HRMgN8iDlT7NTnGuKXqXUfZfbbrXZ3dln4O/jihTaPXCW6WTFi5evidsx27spnh/QH26TDLchiNFGY63dwGke1BXJ1iFP4janp8dMZlNWRxdcXi8JgpAqt2RZRp6twVaEnmks6USJNdX9+0I2Qu48bdRhuGrj36g+aHg/ctr7JAtu3EUbwrYFV+NchaAGW9DrdfE8hauaeq29N2Bra4d0fomQCqk8BApJjbcxxDFVAVrSH/aZvTuFdI2vO1RVzmJ6QbezBUkPIT5w1zYwAg63OY4+NBI/hqYqDJEnUcI2zqHCUmVTrq5PgRw/EHS7fXxfcnU14erijN5gizIv+P3vf4sKWvhhRFVVhGGIc4IsyxBSk2UFP/vFv6EzGAKatCgwsiLyWhtKXEW+mpJOr6iKjOVyztnpMdZInjz5jMPDR4juFq1Bhhc25ZO3uU92U5f+tYEHoJWmctX9n/f7A5AaEVUNidFT7D54xrIomMxuKcqKrDScX3+Dcd8xHO2xt/eIpD2kzlOyLENiSQYdvPaAR89bdGcTJrdTlss1ab6mzEq67Q6H+wcMRh3wDG59y/X1MbPJLZ9/8ZztvUMAFouU12/ekWcrsDkiiMGWCCE3oab+tMZzdhOIrnFDcgbh6uYmugrqjPXiBuks7STC9zX15SXa9wmimHK9piwNps4xlcHTGlPXzdw2TyEIMLbEOg+hajxdEvol6E3XbNmooSRY06i6AHwfsXFuuvOAbjLgR/ADEpy3gVeqhvquBfkK8rVlb+cxO9sHJHv77AnN9ou3XN/M2dl5QK875HY252Y9I0hajRm51Lja4QUeB/sP8LyApN9v5jt1gyf6SlDaNTeTW24uj1DpHMqUKAixKILWkH5vxINnv4JkALUgbEcgfDBQ2xonwMnm9PTljzQXUjbyxI+DsCgLfN9HSB9KwGtjCoeqLXTG7D14zmydocOEJ0+esFgsmnns7Jbfn18ShS0ODh4xOnzExjoAU5Q4IegPd+gPtyjzCqU8qCzK22CCJscsJsxmN6wWS+q6ZntvGzoJFBVhWKK1xfdscyMoP8KK7tDyO9vBTcPhzEfaANtoNTZcQlwOwnD89jX5esHDrV22tnqcvvya3a0envZZlo71upFrCiGJQx8lJFWRk6VLQmqkD9IXLIoFvp8QDEPwU8jWjauV9Zpiv7bYqsIKiSNA+GEDuH9EFP9034fGZXVjUyEkpgQlJKZs6urDg6ck+3uwTiGOGT7+jOXyW15/944nz0KGT57TsyVSe9xMJkRBjK98bG0JW52mXMkLhBJ40qMqUk6Pz7i+OSevcgIPDrf7JNEOvg64vLjBKyRbu0+gNWymL1ZBmICQOGNRqtkTYlyFlv5PyxuVUht6u21wJiex1qKUR62aobBqD6iLNVoIWtuHPDGG7777CnjHs1/+gt5oC7de4wxMbyZ897v/k8SXRLuPKQuDcALlBffHn+d5CLkJOCGb0ZrWFEXJyfEp43GbJ7/6BRjXiLlDxcWrU8bjPlGsNwaOxUfBdgdKWvJ8TVZUuNpQpBnZar0pISxlkeFrSacdE2pYL664PH1H4nsspjN2nxxijOHduyOoc/ywQ17k9DtD0uUKVxtsXRK3E84vTtFxiPQ1BRV+K6bd98kn7wltDqqFzZa8fPWevYMDFosV3718wf7eIQ8fPyZMOtRV2ZQJUjefj1YfXY+H0EHTEIgKFQeQzui02oRBQFEUtJGYLEd5MWQ1j/7szxB//JaTkxO6W9sUvo/SEYPBARKJqUzz8JUClGoIJdJClfLdb/4Szxc8GHUZjh404DMVWMt337zm+mrO82e/oLf3GIz64DW4ec6F9+E+KOH99WKfu6NWColUH1hUDkFFI3hxFkoRgDNoEdDf2uNzIXj35gUn371kdzxC9bqIumKo+mxdhBy/+YZHrT5+ZwAo8nwNwhAGEShNkaUEQasJRWPA1qxXm50WUjcrAeIWFCVUFU7A9s4WSbcDxZp6PUN7IWVVkmUZaZ41vxc5VVUhrEO7Jtcp6eH5ikg7snzJ+ewSRc3OuE+71aJKF6zXBfZ2Spz0IIpQrmYxuaGuS9arHOEkxjh8HaCUIghD1rUhr2u8Vkh/NESGPudXx+QnR0jZoqpCVllFXSyoK4s0GbeXR6wXN4RhiLWNekUpD8/38f0AL/DxlI9UHv3BHs45dOQ1rO3EQ+aSwaDP+cUpo60hajxoUAU/wtxeU5QrVusZRtQE4ZC1E6RFRag9Ii9uIsBayNdkyxnRqAtaEktIQo/d8QDaEZgCBHz74jWrVc7jZ1+wtXPYEFWFBLNZ3+AsxtQ4YZGimeVZwcYK7UdpUR+6WfW98VptaqSvqTcwk/Q1lRVYV+OphNHWIdPbGddXVySBT7/bbo6zJGBv3OLr16e8e/UdO48/o9PvEgaasjA4UyOU34iMG6pE88gYy3y+JE1z0nXO2fEpo5190ixrnM/XGeNBDFXBYr6kKAqub64+Iq0qPM+jEwcEYYInFYPeGDwP0rzBMtrtRnNa5tBKmHz3Nc+ffU6VLynXCy6uZ+TrksD3GQ8GxEHMcnJFma4JQ0m2XKI9SVlsbMysodPr0xqOcDphusq5nawo8holV8ThkF6731Cztvo8e3ZIkTd1tNQeUZhQVRV5XpKVBVWxZJ0ZbG0orePly98hlKTVijGmZn9vh7ouafdCLm8yfvu7/8rPfvYlWmoqU3NxcUVeLcnrKVakCCSeCNCB30A51m6YRhY8SdTrwHzC/PaC26tztgZPIImawMxyrmZzzi9v2B4esP/wORBCLUB6VFWOJ3ST7czGqV+6TSMmcdL9NBH0A4Bcb4LQ4FwzS/xYxy0FGCkoC4vBECjNo8ef8a42TCcLIk9TZ0taw6a708qSpUtev/qO0XjA7u42/p08z5QN5udsc5xq3RSoSDwd4XkBWV7y29/9ESsV6+WKfJ0ymy65uLjE1YYg8EmCEM9XaC2bsZ+n8TzVXJN13Jy8I45ajY9IltHr9ahNiXOO3d0dkJJebwtnugjpuD4+Iqsck+WSMILhaBuFYWYdSeixns+bsZADL2gRac3+k8+RrS6vj864uk2J4h47uyOUjNjZ3sf3Q9KsIN7aAikJJhN0GJEuFhT5CiFEM9z3I7ygeSCFEFTGUTlwUlAUTVa/uZ4ymUwYj8dcXi5pJTFHR406zfMVYRg2AZ2Ezb3c9MtSSBQWZzdHrTPNEVuuOTt5w+3NBUWRUVUl7vISYyoyY3h7csp4tMvjJ18CAVVukUKhlLxX4oBBKPsnLsvipwBka91m5dXGZsdanLPNUSKgIsNYi0EQyOYDMUqhnEBqhfQ8RtsHXBy/5s37Uzwq+vmKi4sz/LjN4dMHvD254v3rF2TrGY8ePcJP7rSxJUi/AXNpxMNx1ILhiIP9Q6yEYQnSDyjzHFc35tMaCLRCS1gtZyglwNaUZUmVZRRZM38uioIgiPB9n8FgQF6VBEHAZNJQuLxgCSJgskzJ1iv2nzxi/KRFb73mxYtvWVQVwWxGna+pqoJSQVlXBCLEDyKCZIAVHqVNqFKPynbp9Acc7D9isL0PWpPfXHF1O8HTPjGC5dk5i8WC7e1tLq+uiOO4wbucw9lGx1DmGXVds8ordNAhirvYOmT/6c+o5yt4KtGdPgeH/5b1YomTDk+vUBp2d7d5+eobut0ughCNIC8yTF0S+7pp5JyhmN8wv73mzYtvUNLS67TRYcDZ1Q1HZ2cICUHcJoy6PP/s5wTBgCqvEIQI5VGVJcr3KKsMzxMb/2SJcxZrFAKFkOKTBS9/wkB2bpP1EPeNRhOtNR4VnoTaAdYg8RGyscfCSbCO/vYBpqop8wmhZ9GiJEew1evS3h7yRdLh/PyUm8k1336zZHtnj/F4B+nFzb+kdZP1rEXrhuEgtIfqdOm5AGcVdVjgeboxzTY1SMf8/IT5ZIqnm+O/KnKklMRxSKh9PKVJs4p1XiBlU8BXtaNyDoMi3XDdamsbml/Uh7bGi9Z05jmxSLk5+Q0qW2KqHFtlWOOojCWQPlkOpe/z9miKiKE7fsZ4fIhu9Rs7XGEwYsZ8lbG93YEoxilN2GqjkxZJp81isWp8A6VECoEnFdqTOARKODxPsV4vmU6WRFEb5zxa4x2wmigeEnV3NjzEzYqGQFDVll6/3WR+alqBjwgCnCnI13OW81umN1esFhMOnxywt7ON6HSQv/0roihiOBzjeV4zNvRDgqALTmCMIIyj+5FqEoR4UiCE+ZDlhG7m/j+wukp/2tFKrDUYYzZjvgZRL8qCslzg6RzfU3gqwri7xWIe1ipqYwl8H4RktHsIcgxkUK/oTK4ak+u6xm/HPOw8JTkNOD095ez0mKqoGQ63iIJOM/XAgfYIgoD0MuX68oaxjnBBi6x0KNf4w91OrvCspdNtc3U5xZfNchNPKJQnUcqRRBGe51HWluHhblOvbAwInZDEnT5CanQQcn11RbvVapoZ3QLnsNR47REeS5QfICpBFAfkixXtdpswaeHFbW7WNVaH4HWIu4ds732JbI0alnRugJzk4ClbEjqdNtQG6QcIBLe3E5zSPHn6HCmaUVyRZht0QVCUNct0yeG4ixMFYVLz7ugrhsN9WnQbGCOOoUibyRE1KMPt2TtKNyfptZFhDS7dTG4Mi/kVVxenrFczAl8x3h2wv7fbYJHZmvPZlN0wIRiOQfrINCWM24CmNoIgan1weg0DrKtAGEqTYqoSKT0ClSDVZm+c/VRg+72R2QdqlBAKKZtudrVKWUyvKNfnbA269IdbKD/aSIc2fLHKgImpjWk6Yi9qWMdeSJB0yKrNas88RwUBo/0HtDs93rx5x9nZGdPbKYd7h/Q6/cYVwFm6gz76TLNKU7pFhR8LAv+upjAsFgsCJejsjUmSxvdOex6tyEcIhx+qpjgGdFGSp2tm8zW2NnhK4EyNcg4pDHWZ0+228a1pBqiTKXQHyEASKsfs6pooDHFViC8jitzQGYyJ4jaiPeDm9BahEw4fPKP14Dn43YYcWGaNeXadky1vuL645fZ6QlEUKN1khMlkws72mK+/fdHUqAK0UnQ6LfrdPq1+m06/zbrMiVsRWzt7fPP1C5JEgc0abbITjQuogmI5x/Md749eE2hHPwk2WOeKcjnl6vqWyWRGVVvavSF7ezu0Op1mbusMKEW7PyRsdSlKRxD6hFFAXRbUdUUYN7vXssWCMNJ4nqTIZ1hXsFotyNIUTyf0OpIoSZppUb0hJf8UjvfxuMwah7ONgOW7//IH6odb3ITv8eOIh8+eQ6sPlcSPOs2r5xUyjqHKQEfUWcpitcaPYowX4DyPrDJYawmTPl/+ssfs6orLo3d8+/v/zNOHh4yfPm3emq7Y3RlxM5vz9Xff8uXPNUEQN8RTLFvjhOvLC06/+wPdYYsk6iOE3dgcGCgzltcnTCYTZuuClDZ+mFAvl7S143DYYn15zOTsFf2WIvVhYQoq51BhQtjdJmgNiP0O7Zbkm5dHDNoBncGIVm+fl6/f0TYxB/vbTN9cMRpGJK0QfAf1jGoyZT6fs5gtWSwWhGHIcr1itUyRnmZnb5ft3V329x6R5WvipMNyNSNP15SmZH055/TsHUkU0OoO8aMBrdYYBHz5xc8b7xjVbIHEZFglkQiCdodXL/+IrSzD7hDhwoZGX845f/eG60lFe3DA/oNndEc7KKlIixRP+3jKUhUzcJL5bMX+fgeISFdLBI6onTT2wfMbom4IJuP29Ji8WDGfz3n/7pSq1nz5xa/Z6R82MIu9nx38TanvEqUk7XaX0NX8P/79/52z919jXI7Tjt/9l/9IkLTZ3X+C8jtE8RAddDaCHAt1gdxkxDRNEcLDEeH5EuPqBufB0OsP8J1hu59we3nK5P/7mgcPHhA9fUr/4TbKd7x6847jd9+hlKLf7dEbjUiGPZJANSs2szVKR2TrBbPpNbPZBFPlJEnEeDRidPgEkm2S7rCBT2wJdkVSTlifpNTLFalZ46ippET4Mel6jtUtChtRW4fyYm7TGhdY2r2IcHSAjNsUVtMa7zHPS/K3b7Bv3rFer3HO0e12GY1GPDgco/0WdeXIiwIrJEmrhep2QAriqgRrGIuDxuSbGtZzzt+/4+L8lLPLGZW4ptu5ph1FdJOY8dA0ckelIQops5Sb61Muzk6o85xnB7uMDvchXZF9+zVvz16hO32ePf4ZnfFzrD/Cbhbt6aCDqRb366M8pZDWNYB0EBCHMWjXYKZ1Sl0vefft10wn59i6QEhHHLUY9NtEwYDt0TYiiMDK+1XCf+PAuyOFBkFA0O9R5h2kHxAlIQ8eHbDMcm5mM87Ozpgv3rK7+5Qo6TRD9WxBnEiksHjSEQXNIhIhG26atZICCJWEoE08hHjUYTk75+zohDKf8JQl8fYWnbbkL37xgHfHVyymKYvJNZfnxyil0KrphPM85+TkBCEczhoMPjrwidtdBtv7qNHORme7afvzFNYLbtcpufCRuoWMAhAGiaMWHqVTlJWjtIbaaZL2iNo4vOE+pZSsTcHt7ZoVE3YPnhB3uhwdn3N2fExdWbZ3xmztHNDudRqIyIvQWtNyG2Be6kb1hrhf0IepIM0xRcFykZPlCj8c4Uea7miHuoIqXTOdzllMpqRFjlOS3nDA2laUdYWHYWvUYtTxYXFF+vYtL15/S6Hh0YNn9PYPQMVUpaGsKoLAQwrQnm4YMJ4i0AphLMqVm3GkZD255u27lzhboWXNYnFFt9fm8YMvkAq+ffGG0XCX0eiAzmh8rzD7IbqX/qFA+0AMNfe4nhQCvz/gsy9/wfuTt5xd3bD/+Wd0tne5Pr9htOUzn6bcXF8zvbmk12sR9/egqHBVTnewhULj0BjAGo2xFdIJfLm5CbKincR02wHp6opvfntB0kl49OQx4bMveZQ8wK4r8qzm5mbCyekZfhixt3tApz9oBM9Rs+eBLGV2c8nV1QW//eMrCvsdve0DBoMhvSQiDEPQPZLRPno+IctnpPUSIWWzxFl4WBmhoi69uI+KuuwcPKVy0BmNyW6vSWofkaZY6dHefwpK8Xi4z+Nf/BvSyYTT4yO+e/GaKAwYDAZ0Bn2U9lBe4wEohMIhsGickMxmV6wWa9aLJVVV4EtFq9Xm0cOnJONRQ5ita+xySZWvWU4npBcnKATtVozLFmwP+3RbEcoULC7ec3P8jvX1FWVV0j18Qr83BhVAWVPXCs+PN1CaQW9KFIFptpZL3Ww7qlNWkxnfvP4GrSXjYZd2J+bpk0P8fgfyNa9evEKriE53TLe/vVkPsRHC+Py0yuxuXNbYEjSE0LtaTwoBYYCMdvGnE05O36OjFtsPHzJ+/BiEYtDPOX53xGo5ZzFdsW16oByuyMlXKxCq0Ty4ppaUuhEA281SZKyhNgXOpHhkCJOTT644Ls/p3rxj6/m/Q4YD4t0BD4bdxtDbj9l78BCCGJPXKNsY1RB59LYj/NaANF2Rlzlvj4+Zz+cEShNrTSQcq+mMaSYoM0GrNcDzBH7oEYUtgqhD3B7R6W/hJQPo7hBt5Icis+w/7eNpyXw+b26mH262NVbEnTHPfzEim0+5vbzgZjrlfDLFOAdSIZSHUg1nzbpmkbuzCq19ktaQrVaHTpwQRREyjEBLzHqF8iSyOyDo9AmSFmVdIoWhvz2gH21BOie7OWVxdd4sHLy5wrOGXtRmlabUVjXLBpUm8dsYBNY1u0C0VyG1hTKnWM/w4jbIGtIlZycvCLXj8dNDWp12Y2+rNZiKt69OOD+b8NnnP6PdGcO9/teBcn9K+/6ho7YhBKj7RuM+A0pwa4MQNftPP0MFIUenR+B5bD98AmmK6rR49MVTbo7ecXL0lvr2Cj1qEfsetiw2UwrX4IBKoO6MRcXGR0U3Yy5sBdWa2KtQosAt51yvZ9xMcoLeHk+efYFQIdbVJGEIUQyFQyW9ewdw5yRCKeJOQJT0Mabi4PFT5rMJ88mcPM0wFnp7XbYfPEOKAlxJECqiKGhutoqaJ1dFIEOy1KCCEB+BDuPGjs3T9MIYvJBivsaP2vid3uZJNkRBwsH2HgfCUi6m5GVFVdsGshGK2orNbL1xbvf9kChMGtTg7oYZC9YhvGjjmNRoYqq8oijKhqFjq2a1/fELTt+9IJ9f49c5kagIlMU4H1tZtBfx/cWhDZlTY+sUqRvQTQuLdGXD2snn5MtbHj5/TmvUb87OLMOkOcdHJ6xXJb/61b+j2x9BkDSnl2lWqSo+FmDxY7SohonS4HjqPvvd03SSpJnNaUV/e5ezq2tOzhrqU6fVBpODr+l3Y17nCy7P3jOu+9RVxWjYAVNgrWykb3j3dPTaNYJ4CcShTysMWC0rbLYk0DWRdhg/5Hp9S2EE10mMkSGT6xVh3G9eTzV0e2ObyxJKbmoLi1AOTQlUdHsDur29zRN5BwcZTL5E+c0D8cnHYy0YRV01R6IvJFW6QtQl69kUW1W0B43tWtDpgvMpCkdtDbHvNep6k1MtFvi93ebUca4RbyMbMTYCoTzE5s9wAldVVGVT6nhKgyeQKt6MFWuwDqUDgijBI4Oq4OVv/w+q1RXl+prAZESyxqPGMzVpqUj6CX7Q2N1WVQWupHYWW9foyMPVmy1LStMKA8p8TX78msV8BS7D92goZNKDMGHy/oTFPCeKu/hBF8LuhiovGg/FeyJoIzFVHw3OfnBW2zBC5P1/c7c+wIomA5iaoD3kL/7t/8jvfvtXfP3Vt/z6z36JKlK8bgdEjRKW29vbTYc55cnTX4KySO3whbtff2xwaCxSa0hT6rLCk4JQajwniIRA1yVlsSCKEyph0KKmKnPS9Zoyr5qMqUOsU41yTCgQAotpeGa2bgKIBsbxgib4i8ri6QCpBDKKsZSNVvVO5eokUijQm+pUGOY357z97nf4rqBazcjXa7Z2DllVQNjj4Pkv6A0PN+OpHGUsvh/h9UJcVWGcQ6lGt3G3skFoDyEk6TrD8zw87SO0xleqGZ85h60N1oCWoiGNSokMEoqi4vj0DWdHXxOqNdJkxKLEUwWRdETCISpLZSxpVVHmJX7c0Nykbgb4hTENcda6RmRlLRLFYj4lXczI8xynVbPWar1CxD1uT094+eItw9E2z3/+5w0tyjT6FSsEUnkg3Cbo7Adn9p8KvLu9pXcL3u7TstQY1xxjyoB1mkePn3F9ccFXX31F6CuqfI2vBZU1/OyzL7B1Rf36Lb//6mt+1RpQyxgZthCqhURR27J5ilWTVaOkhasdGEuAh8sLPE+hEQhjiDwYPHsKheD4/Hf0er1mXagSGDRyI6FL84IoUCghMFiUF96ze03hyOuSJOljnWRd1A07hnDzKGwIo0Ju1nhKlDSY7JJiesI4stSLJcvVJT2lid2aMOlyMpvhe00mN2hU0MLZktoYtBIIHSKtQyjVBHhVI6W/cVayRIFHvVG0NYnR3gP6XnAn8hZUWY6nFEhNZR1hGPKLzx6jmPDyNydgMjxXYIsMAr8R6tgaXzeuB83tbE4AgSMOQ4piReB5IKC8vWByO8MaOHjUGJV/8/IVL757hfQC1pkBpzh8+Iit7cMGLrGyaZhoxn0f3Irt398R1CGRIgDtNrPcgG6nIQl0WxFa1JTFmrpqOHBxqwdKsZM3BfV/+S//icOnzxhsPaB0OcKLiLwEjaNeL9C+Bs/DU5pKaJSTm1BpAhFnmiC1BoSPUhsCqZBYNLVtOBFSgu8HSGFx1OTrFVLW+NI1nbpOSJJml8R6XVBbCALNujBNtlYCrTSahuZjDEhTc/72JbFYQrkknZ1hF5dUQKGhuxsx7rVIF1Nk2MNoiZQKJX2cyZuDxmnKokJrh/Z0I5NsnMspsxV+HFKla4p8SRgHaK0p6oKqMijdauhq0m9wOyVB+nhBhItjVKcF02ukK5GuQtE47wunPzSN1jU2I9RIzwMMRZHj+yFB4FMt5xy/ecH69pJep8/e3nNUOya7uUB7Pvv7h+ioTZHX1EbR7W8RtHsbAZHeOIR+vIddbJgp9u/n+m6xGymgaIguomGetnojWp24YQJXaxaTW2bzBURtiFpsiw4Iiw0D3h+95e3JKc+/+DOGcRtjU2pTouNgM+AWaLmR/qGRwt/82+VmILHxrJAazwuaGyE8HArP09SbGbWnoK4LJldnrOYT6mqNpxVb421aoyE4i6tr2kmw4RtCK/BwG9H03fp0a6GuwVYly9kNe7shi+mKan5GSxRYY6hm5+jtHfa29jmZXhP191F+C2NdczR+ZNXled5HXMcNY1fU+L6CuiCOfU5P3vNXv31DGEX8/Bdf0kp6lFXeIAvSbxgsSoJROKXwghCSGG5rpDUoZxHCbvbhSIwEa5vVD4S6uRfFGhl5REHD3Xv//ohqvSZdZHS7Iw4f7MIgbtag+gGdwZhOd4RqD2g7ha0sMupsGgmwzjRQ1EeKPun+RNb8tw88t9HKWCFQTmKcQNqGpSek3oi3y0bn6W4prcChESJqtt+Yit0nMX4ccXR+zZvXr7i9nbKztU2/nTQVn61AOiQO4yy1M02+UwrpAqyQCGsb2pfSaOUjtHdfqN/rZl1zkWW6Yj65xpkUW+Xc3i4xZcG+1Ph+i6KkEbgIRTq/JWrFDYZna5wTSOWjZNg4gUlBEHrIbgynBWU6Z3vYwlSO6XpKtZ6StCPWp+cIajwcta2a9euubgpua5DIpia1hnw1a9axhR64kpvrS65uLlmtVjw83EX7PkdH7xiNRozHBxjj7jWbzgmssZS1QWzYPGyWTjd74wQ1EusEtdMYIYl8vdlkWCF9BZQsVhmXV1Ouzm+IvJAHD58w2t/dCIpWoAKkl5AbQVErYkLwPKSw9597bZtKXasPO3c+3vLNvQPM3zHjKakQmzFakyY226jvO98anGRV1lRojAzRhA3GZRq2xXDnIUlnm+OTc84vr5hfX3O4s8X+uANeBbLG8xtmSW2apSZagXEbjuAGWkALhPJRMmi6WqcwZnPBjka2WGd4lGxv95DCslhGvHl/hLM1n/3yL9BJCNkctKDTC6DeLOa7szcTCmRNUTuKPMUK2bBndNNFO1uBKRB2s+w5/HBjBQZXrFE6aeopKRCe/rAYRFnCRDZ4WF2SzSbcXp+CMSSBpttKKCtDvlrDYLzRLmyy5EbUVOOwTmwyAlTGYixoJE4oHBYjPGohcNYjDgPIl81dDyJuL475y99/jR90ef7sZ7SCNt3BoME/KtMIvz2wXsz57ZLDx96GoLsxHtoIq4RqYuOn9lr8nY9aQUOTkx/bKkgaKzHRuB81MnlJXltkGKOiDtZ5SDRGJk3cl0vCuMfzz4YMB9e8ffUtFyfH6Cxme+iDzBsX80BiC0ftLIW0FMLgpMTUrrFOUtwj/yDulfhSgq0M0NRNwuTErRGYDCEjuu0AW60oJmcEvQFUJa6sEaFHnWXocBNYcgPR0GCgtcnJrKUuK4J2h3Z/QJ7eUBdr2q0+nV5TTiSRh6tzFCVaNFpdXAl1ia0caZYhhSMMPGTgN7SzxYT3b15SVRWfffkz1quU64tLpvMlSbvDeGt3479hNusdAOnQeiMKqnzQirquP3L8ElghqZ1qfqEI/QAiHxYTjq5umBU1w0GH7b0nbG2N8XS7oViZCpy/YYIb8lrhhz0s3qYB+1gfLDYIwvfD7ge2rYi/Y8a7U58JK7/nbys24wdJbZv6VQctIKB2XmPYqSTZoiRqtxubxzyn3x0y+B//Z+ZHL/n6r/53ionHXs+jLFKENI3ppzEYKRvBCFDZRhqIlY1SXah7StedMWhdV6Adtsw3utmKdHpFZi39fsRylvL21R9ptdoEnk9Vl1hbk6YpKvCR2kP5EZ3BDr3RPjpMaMsEP2kzTWsiL6LVH7Fa36Ckpj8YNKO6sxPqqmK1nNHqbxEHGpPNcOsZN7eXTNI5RkIU+HiqQfY9qVivVlxcnPLwwSNWsylVbXn++ResFynfvXrN7fklw9HWhpVjuCOWS6lQnsaoBpM0xjRgtGx8XSxghKKWHsYq0mxNeHvJ0dkZ5/MlO4+fc/jsF0jVJSsa53hnbIM9qub4d5XBiIYmVVvd+A1JhbPuHvM0uM3aiY8J7vIng+9vtctMbVL8JxOQj87xBicDU1mU13w4dyoxJyBqdXFVRmUMUnoIzwOXEwaaJw8P+O6v/jf8/Q7kt4g6RYsaIwxC+JsZokPajbOoyZGuauonmjNWbB64BnvUaM8nihOIWpQ1DA/2KfIC5ybYyuArzXI6pSpTdneG7G0NKeuS+XLBej0jdRVtrVGtMdpZ+u02q/kJrshwymuICL5Cx10oK75984qZjbBhh529XRAGuzhhef6ety++Itoe0x716SdhY4R0c4MQiiTusru7y2AwIk66TGbLjWuuTzfpMeyMmm2KTmyItwWeEggMigJTV1BWONvU3vZjF1dXo63AtwXp9TsuLk64yQyPfvlvePD8C/KiwtoVcTLE2cYVFEFD6FAeQjgCz8fkJeJukQ7exlKtaSaUkLhND/vJVkUn/4G2N25eSGxcl9wGhb9HbazFVwEmK9jqb2GKNVHQwd35gQvADxDGIZTEuBwlLEE3Jn15TScWrG9PCO2SgBKEbeqYvMJDUlVrqHPIbiBO0C7FlnNwfYTQVJXA83Vj94ojqyVZpdhyIb3DzyAIyLIbRDhkf39MOlsgrM9oFHF9+i3nJ28bmo+1jEY7pIsb1q6i8yiC6QIzvyK/vUKS0vIirJ8QdTu8v1mS31bsPPs1ifPp9FtgJjC/5Oab/8zs5AUdYbl5dwzFPnbRJ2kP+OL5I47Prjk4fIgftvn66zc8eDxqRNJhQrW8YTXPSecpcTTEOG/jgFohyIAVvligvWYUeXM9Q4oAY1ZIXRN5Nbaao02AV62QyzWRTIhkH42AShP6nYaa7yTCWZyoqWqF8hqXSyVq2kqgigV1OUf6W5uN6AKcbnQ6qtkJIDebnvixY/fvumDlB/d1i48WTtkGiZfGoaxFObHJVB8v4ZMY8eH3u58VGJQrkRRoV6FdhXKmYQhv6nFPaZSUuLKAqsCaClvnzQjJWXxfY4xrrB+EQgUxeQXT6xnomLy0tPt7bB88grDFcpVTW8tiNqWuS6oyA1fjK4umolzPmV2fQbqCdkA2XyIRxFEbqSOySrOuNWF/hydf/jnDg4cgBGm2gGoNxZxseopdXdLxavqtAFFbbi+vmE3mFLlhPNonbPWo8BnvPiRpjxA6oloVZIVhONpBah+bNU4J7l4DU2HLJVWxwtYlOIdSAZ4fI6SmtgZjatRm1VUvUgRuje8ytK3vvYob+Eh9spHTySaVNFt7GjjDEw5JtdnMaT+YNDhxZ9P8p+Ek7D/Uvtq/STTaDzPejyhW4n7bhvzxTcs/uWJeYpymMILFuqbblSgdYZ23uYym1itLQ+g3epB20mGhfG6uZ/R3tjf9kA/S4sqCdbmim3is1wu29g7YPRzx4uvfcnx8TGVzrHHUsuRBVUKnQ9QZEBIThSCKFX57gE5aBEmfaLjNfL5mtHNI1G1jlxPevXzDdJHSjjsgI778+b/HG+wzna2orGI6t0SdgKIKQIe0ey1UEIPU3F7ekpc5W9tjwjAAT92X83fSQWvBGIetG+LtYp0jnUALTW0FnhAgBc5JnNK4utq4e4j7+yOE+NG9deLOLFbKe7YSP7IZwLkft1n7B894P/YO7hynPox+3F+/fPmv+XuLxAgPI0Omy5qiAOm1kCpqOtDN2f+xYj1qtRkMRpRljc0Nkd/BIpnNFmRZihEVcSugrAvUcAS9bZLOLl4wRvgDhN8lN4I0W4MxDHYP8dtjShvgdIve9iHd0SGVCsmymrRw+HEMYUJR1syXK4QXEHf65FbjtXZg/JT+01+ztfcZeR3gRyOCZEAQ9wiSDg1yKcmqmsI0w3u0BE83N/devwra81DSo6ot1TpnscyoUUjlY4RG6BArPPLaUVSuadDEnV1bAxfZP9k4qz6xqrsbBWndOH/xE8H3j7ih+68POqz9QCjdXMH3CaZ/l+fCoegMdqEMyYxitq5Iq2ZMGysf5xpIxfOazFeVNZ4v6PeH3N5ccXM9ZbCfoLVHEkbYeoF1BVZWrLIV07Nzrs+v8HTM8y//LcPBNpP5gvOLS2ZpCosFUX8LWRnyNGucPeMBOomp50tq4bH7+JDTk1PcxRU+JUHcJi/m5KagdBpjI9Qmu9V2jRUxftTDOR9jmhHkfDFHCEGNxY8jnJLkpiAUcQMcWbAYpLSgfKwQrNKC68mKzmCLQavGpZZimWJl44Xi7viOd+ZFP5bxRMMq+ZMD6fuBJ/7+GU//Y2U8cYdv/FRQOfmnF+HEj37/eP8xXd3nerImqwWrNCXNCno0WK81zRbQ5hiqm2ZXSzqdNqvlkus/fsvzz5/hRwG2EEgq6nKN9ODduyOisMNo/JB2bwTdPjs7hqB1RFnmnF1f8mz7Id3BNpGncfmaRVGyKhyV1bR6Q2xlmM1mlGWOsjm3N9f4VUmvFyOVR5pXxMsCNWg1kisnKIoCHdTU1lKblIvrK+qyIAg8BsMhQeBjrMDaopmC4LAb1yuMoaottRGUFj778hf4QcHiOGO1OEdaQSg8nJR4QUhZNPZjDXunMWds4KgP9V2jqf7ewh3VBN79USv+VJn4z5vxPnISFR/y9UdHrbgvSH84u8kfrQIcEhm0iPafsNtaMk9rmBWUpmyQJFs3YLLwsKYiCOXGarVie2eLq8tr8psVt+eXtNqOKCwJAsdycUO/1+K2MHzx+S+gtwOZg0qBp+g/eEAxueDm3RHr5ZKkMyAaaijXFNma9XJBVTuEHzO5vsFaSxKHuLLJ/GHcYvdgD0fMbL1kWhzxoJ2wXE7RnsBTEIQSzwpevHoDQqCVo9/r0E7iJtdv3AUaEM2hNw2dqQxOeLQ7fXZ2H+APItAp/u0rKifwUFipMViM+9RJ6/s1+Mcb76z4MPq6cwYV6qPA+5Gs988eeJ8SSP8mx6n88f93zWzTCskizelGCd5uh/4iI7yeN7YIrsaaugFYncPWOTJQzTFjK0Tos7U1YGt7n9fffM3F6RnPn20TeZLLixse7D9AjsfUZY12qvF1TtfNSiRfEsQBSSvi6N1bdvcdvV4LvIC41aOua5ZZDs4x3B7z5tULVBzws8+est0JyOeXRNvbMN4jTj1ev7lgdvWWs/MLgrCFtSuWk5LXb98jpObhk8eEnk8YJ2AN6XJB3G41Q3lRb1gpm8BzFs/zSUY9wt1DKOaNnS8aYyXWa/DTqq4pXMEGZ/4wftqwSf4E9N0M991dgtgQHX6qVv/bln36b13Dcbenme+96ebv5ce6XOfu37RxNGZ9umEGOxxKqPuRSxCErKXEmUbnYV2D9UkpsZutFfWdo7apUb02USuiqFJsvW42HJqiUUB5riEcKIeQm/VKoQarePr4kNnMcntxQl7eEnk+y8WCwOuggxjSoqG2aI1ZLlnnU8p6TuB5zJdrQt10itSGqq55+/59w40TDqxhb3sLZ5rZbG93j2WVkt7MGrszPIIw56uv/yNZXtLuDrGs8YKEdiw5ONhHSIsWptElS0kcNwIfKXRDk9lYxZmiwA9jzs4v+cWXfwHVhmjpFHltEZ6PMSsKUxMnEco4lNCs6xorLb1erxHXx60NO8c0xykfrR9TG4NL13S0WuuNo6n4k4CT8p854/3Uof9pFhQf9owJdW/OfF/4uk/9XFDNOO4+4l3jrezcHbZUIeRGWCLcB8NjsaEeOddga5FPr31A78EQ6iXkK4o0pywE79+8RpKA8KmswdgcqQx+ZPH8kIf7e/iexK2XCClo7e3xa0+RZWvwA8hzkiBgvUy5PTtD2pp0maOwiPMrrtIVBbC7N6DXGzAYbW9c7/1mEF7f7THbkAfuZJDubjGdbsQ3G22MzUtqIxqxkBObAX6x2ZK9oWMJ1+zyuMNLhdcE8Z0R5v0JY3/83t2XS/9wIIj+xwq672M+QvxE4yA2BkFO/jWA9WZBm7L3rz2dTrg4PSKKWw1pQDRHSLPe4YOvrrJQpyW+FGjPIJXBupyqLijyiqoUhFEbgY9Fo51DKh8/lLTaPl4cMZ9mOFNQlRXGVMQ2bmpPqRvPPVMRRRF1kbNeLcEaPK8xm5yuarqjIWiB8nw87VPma2yWYWpFZcDTEUJ6KKGRKmhIsEKCFTghEdZDKEetUooqByAMY7q94Ub6KEBkd1AqQjiUs0hqpN24zktxf5KIT3BW8SkF7nvHr3ENReBfZuB9vxv63kV91G/cL3q6+wvP8zbfJ78XgHcXLijyuql8NzT2JIo5P79kentDmqbc3EzAyQ3ZWn5YmeAaFmwkJc7WGFNhbbPx8M5JXgpNml43NrBCb4BXg5SgtEBoSVXWtNttamvI8xJPaYwxOFMRh2FDb3eGMs8osgwpJUEQYA2k5Ro/W2OEwdQOY2zDtEEiVIAUHkJ4CKkQeEh5t6/sgxu8qwXKF6ALnHJUxnF6fsGj61uG3T5+osBs9NDubneiQxqzgbqa5TBa+422927fxt092qAMH1pB1ZB7neMnFnv+C894P3UKC4Gngw/H7PeajCaAGhNIKtHQloBBd0g7vGLQ7tEbjHh88KgZxdHQpZzb8NU2R4myZcNgkbrJUk7dB6e1NUpLUM3Q2+I2xlK28Y/BIlyBEI68qrEG4labwA8oi4IyS/FEI2l0ZoNlyobp4qygcgVZuURKi9Y+nuehtY8QorE7sw5Tu3t4QyA3kMudcbjElZvdYTLFKcf17RRrFOPxNjqIwK6grjFlBcYgtUNtIGlnLUZ6yA0mJ7RucLv757sp2D82dbp//p34yZWy/2Iy3o+1Oh+Vbt+nmH4kKvrgz9e4WDZZQTqJlF7DF7MKakPghWjp0Yq6RMOt+2DVd0eyuOOLbfhjNt2wRMONxNLfYAfNvgvUxj3eNUeTdBsppgia75EpUBOgNw5IzXIUP/Hxg7jphq25W6SxaSGbDUeBVrSoPmVvfDRmDKoKguB7UJL8FN+szGYyGIByTGYL/DBCKK+x8JUCqpq6qnDWol1z1OIcEoFxjVzyrklwm9Vh4nsO838CBjt3rzb8l5vxPppW/I1J9XcfBvKHZ4ebs9nUAioJgYLaIvApM0NV1A30UVbN60n1ETtiM68UG9NHHMZI6lqBa+jaSqt7OyOHwYhmQXFTiAcIoiZw6zV1nWOcIqtMM3MtDVEY4itJOwqJk6RhXG/Sh5Pexs4BhIsasnBVN/Qi4ZosKwX4tnHb+uiBtcLex5y6a5DuhE8C8ry810O7yjSimqqiqipsXSE9ixSmqe+c2PAXN/X0RqzvfrDx+/gAk9/DYv+pA8/98GzV3mUoJzcs5I/f+WZZl7Co+7UhH5Nm7jKKwil/4yjwQeXesB7uFu9W5IsrbDFDtpJmo7UXIbTfPI1V3biOyw3b4u61REPfEdJSuQopQKoQXzUUI1zjpNWsE/U2+Vc2HfLG4t5VOdQZQmXcnrxlOkuRfrO8OPAiTF5ym62YWMfBwQHtYQQGKqHRXoih2fjuCfA0KF9vMjKb+bJt+G1yo6i7u9F37A7RyASFvhvfbzJu1WwXEtI2HsaNrrIhhGKwstrMdTXOaWqlMTKglpsOmWBDrpA/MTyym7e0Ydx97CcrfgyXtZ/+lfh7M5A/NAnm3mHUIVwj0HFlgQwbi/yiKDapv0AE6sPT6hrpYH1/6IRos0Qlfdr9LRbvT4gDSSA1eZ7ihY12VNUpYXWKzM+w9YhChoSeR2/ngJurE8aPHoAIm8XJDfrSrF6iUaCURuKpza4GbCPxuxPe3F2Z080vAsr1FD+WICuK5RmUC27ff0UnjtgebUFrDH57c2QDYsjZ1SW3Nxd4YYAOWmg/ZJ03SIvYCMP+/+29Z49cWZau92xzXPhIb5hJW6btTE/3HY0ucKVP0u+anyVAwMWVAEE9GPVM26ouslj0TJ/hI47ZRh/2icgki2S1qe6q6mYAgSSTzMzIE+usvcxrVkaMoh60y+WKajlecvUONRT3fgXu9yArWJSQtKCYMjo744MP74KZQtQAnzEaTJBxRNqJmRdHRFoS0WVeaETW4mRWcO/7tyHu4mxQdLgiSdQAdh9qTUERoPt4JqMpm4cZ1oWM6V2gOyitcO76HO96Q+SuQaPk13TUXrOxXK5YrrpXEYjJy/+4pKgJv3qjr4pYiRIRQkZIFdW6AlUt/O3rI8+jhAE3pVqcoyONkTGVEERxxswETgOxwMsIU3Nxl9iL5dzZBRrMtV/A1ndnuAxVAZEMs7Q4aYd6L58zPH+GL8fsbHZQcRA5PHv4Gc+PBlhidm8dsHvzAEmFlxV5NaaZBRVOqfSyVaivl3l7GngTYMj7V4GVMlicVkUV6jW55BE6MJ6iKCiKBcIZhPBYb2oD6YgShddxOPpFghTJq6AAEbzVhFi+M/U/2Aotgm60FzXyWFxHHMt3bKXctaf+EwPvlRf5hn+uJRe01kGbA1iRSJ1blVxfysAi6LHoJAGpMa4WkryW1qUI1geT8Zg1LUPNYx1ZlnFuDOQzaK3Xwvb10JmrEYEQvPWNXt5DUVzHYsDsgy0xeR7US1sN5n7BybMnnJ1NUFGTjYNDur11FlXJ7x/+jla/hfMls/k57V5GZSuSqI13KVrKd/kz/uHIW61BWkbTEVrHxHFwwg7CPgXF/IJyMSbFokUMJljXI33Q9ouDSn0YONduna/FjmRJF62vVXVlYPim2V+o/8RfuLkQb/oZdT2lgtJTpGPyPK+DTdX5xdcE4zfdGOFro6wBuhbzRuJ8SPtyNWfyTEaXrGHQOPCORiPM9GazGc0Nh1q6OQgZaif8alrwKkrWvfsNro+JyhTkRQFS8YtPPiFpNNnYv8ne/k16W/sgNPPxADFW5PmUwhS4mUOxj/EFihTjbCCmC/mVQ/KvQMOGfbSbM54OidKEJA6bFnwB1RRTDHHVHKUFigRsGBUhg35K2u4Sp61rXJnX+jw8clV+hBrZFkVQV7g2eVg2fH9K0P0JgfduHD11cKRpyng8DoGnwi218q+ocXPy+mlN0AFptnqoOMUUU6zQddCGr1fCY7xlNh1CMSOKWxggTVOiNGE8ndN0BiErBEm9WQtNj+A6q12+82gzxqIjGUYjIpjLnJ+fM6umtHdvs7t3wOHBvZqABPlijkrb7HW7PPj8E4wpAlrGOyIZVAnCRTZ4H/8ZOU/ivQ3e0dWcyXxIs9FGRmnI0t5BMcTZEdIVREKifbD98t5hqXBe0Wh2g+5dDWtfbhiv34j1O7bKeHk+J9L62pD/y2ikPzb4/vzlm7+e9cIPz7LgiRo8ydyq5X8FCv96GpURcbODips4GWGFqneOBEkuQjYz+Rw7ukD4EoVHakmz1WE2mwWOrDV13bZE2PoVB/rVjPsqCsYvM7mqzdpsEVqfLKPRbpBkbX7y0/+Vrd2PKF2KcRpHSpL2iKMmzioaSQ9cAj6hWIAkqbvXqG5a/rzLvKRyFsWCRbmg1a6JOjZUzNX4CKoRsahQ3oML4yCkwODxIiJr9YO0CLre8ISu+vpu/JUSXgjKYrHKeHUh885N1V8o8N5wRPlXYUxp2qhXSbVdkagbi3qkIt80IhUSWj1k2sLKFCeCJgo1e0kJjxQeYUtmo5NAbxShA2x3O8zzRRB/NAUSg8DXgVuXyO5qwvPOI0CHrJ0vFmAqZCNjZ2+fw5t3sIVC0yVRXbRsQykxBQifonSb9c4+ieoR0SOfSPAdfJGAaIJP/uzgC+MES1GLIrWavTA+KgNQYnz5DFuco32FsA5vFFKkECkMHqFTkka/NrsL+9fl7HL5HonVnvsKv1dVFVIKlLoa7P85QffHBZ5w766LEKuMt0SrutrMZFXHyVcHB7UxOkvGE3EGKsXLBCcSnNSBvOxBeIfEIpzBTEcrf1mAJAvmc5gC5/Kacc9yCHGlVvQV16iq6iVypNFxWmPfFNYLTGnDMbWEJ1UVUqogmmgMzHOyVo9ENtA0KHLAaYoy/NylctKfHHP1Te+8wZjgv7aSHLNBAWoxOcFX4xB4xuGNwAuNVxIrBE7EaN0KKgFeYL2vR3/2yxfHXdk0W2sQ0n/J3v2bz3jXlv2L8ZS420UIwXQ6XSo6Xh27XqzqPX0NXRwEOFLaa1s4lWBVQGiUZaAuanywh8cwHZwE4xJbgTW01zdAKI5ePkdlwbyYukGtlnFtq+Vs9uqJD5uKWhFPRSJ83jl0UuvWlZY4TYPElytgegrjE3BjqvNHYMdgpxALKOcc7m1TFgW+ZtYIFQbFla3R5vIKGfK2LY2/tilYAjCtrUBZqnLG5eUl/d46kV42LBXMLilnAyKbk0WSRCt8repgkDgd01nfpdHeCChtoZFa1Y2yWA2KizwPY30lKKugXTibT2g2m6A1jqvSKbh8KuL4j8/kX9/KzAdtsaBh7IiihDyf033L2bZU37g2iwl1XquPSJrk4zFaChKlEKZEKB+UlYTDzkcwvYC1PsiwH233usEmPl8El2iu835rTT0VrY7bLyO0/GqF5JdcUSkxzjGdFQwvL+g+/A35eIKxOY1Gytn5Mc1mkzRrsrG9B/0dpNZkCTiX44UhSmN8rfXzp6K4A0wdoKIqpkzHM7a29gLr35SQSXjxEm+mYHOEC52plhFWgvUVVsZEaRcRNcMmoxadUMshbz0qW4pyypD0wBi8tyTJ1wmK+mMz3lKy/W3fynt0moH1ZFnGZDK5NgR1V5sP/+pkxq/s3CNa/U10o8PcBD6BVjHOGaQPfhmRd1TzAfnFaVjs67B92NrcYT4dU01Hq5AuVwdI7eztrx9d/rXh5tVL9fXkHhEFR0mnMLbiwaf/zvGzXzIfPSTilGr+mKePfs7vP/kffPq7/wvGj0GOiJOcorrEuDHICYUbUzHFr4bH7w66N2U9KR1QMB2fU8wLNnqbYUZaLiA2nB5/EcYoxkBlEU4gdZjVlULjdSNku7hD0J/Wy8O7xi2GaxBFcTggXBBfLxfBrLrRSN9J0P4rHLXv6GxN7TXrHM1mMxy1JhyVr//I16gneMJEXvc2iJtdKqcCpEmKuuuyYA1SWGw+ZTY8CfD2+gX01vrYqmQ+HoAztZLxcpWz3JqwEkh8tWxwqxn31fwq7DB1lNLprbOzvUuWKFpNTaslaW836PU0VXnObHrM8PIZF6ePoRjTbEikLLF2BhQYN0HIMsiyvhZYrwfZm47bqxp7wcXZSxppk1azduLWwPycweAZmBKFQIYBKEopjPCUXkHUodnZgqQNqHoDIV6FsF1DGZsKlIqYz+ch46XxN5jx3pAhvrTeqTvcVqtFVVUUi8U7mSBydSRKvJeQNMnaPaK4gfNBg9h7j3Ae6yqEN0iTMxtfwmIW7lnnIE1ppBGz6QRT5K/eE7W9wRUC1V9b2l2tpNwVEj8w9C1ARK+7wf6NW/zwJz/j4O69oKfsPJUtEZFgc2uDvRu75Is5fjFDS4U3FbPJAGNyIuWIrzc5fyCA9pU5mavAjphOz9nZ2gPdDGkphsXRF5hihPTBwlQJDc7jlaPyjoqIuNlHNdeC+A8a61/P/Eu536teEGAxn6IENbKHb1nGW34rcdVkZFmGlJLJdBQy1ptgN6+srSSe4P3Qavdo9fpB382YsCes6zSBI9GCfDpiNrx8JejX13oUiwmL+fQtDZF7bXntrgXg1UsUojZeLAzG+qBo3ujC+iFJZ5e50czmQRRIRi02tm+wu3OIlCmXF1Pm04LJaM7LZyeML0eYoqxHFP4PynhLg5tljWetxdmKyeURsfbsbO7UuEQHZcHx8SNggfKORCdE6JW7uhUer1Pave0ALrimvF4rC74RyKtroMx0Og3C5EqA/1YGXv3CjQGlSJKEOI6ZTCbXLqp8J2Hby3C8Ze0ua2sbyFqIMYoUUopgCyAccSTI51POz8/AVuHrrGV9Y4NiMWc6Hde9ah1qVXEt2PzVx9dy9/JlehcU35WKAvjUK3ARFAlWbFKwgfE9nFgjirfp9A6I2/tsbdzGVgladsiSDYRLiGUTTUZl3Fde7uV1ut75LsdSxpScnjxja7OLSmvnHBTl5Rnj0RkSW6s7Basq4TxeOCyWKGnSX98NNxBBCuP6771aiUsZGG21AKepKubzOWlaizR+c0DQa0v7Gsf2ymelxlc5IgqIYhVHFIs5wlcg41BDLZEsy7a8Hq34enuBN5B2SDsbDFVCJQLUXQiL8nGQw1IOUw0pRi+gGKNUN6B+2xvkVhLnY3p+SCK6xERQmoBNwoKygXUlwh5Xrg4ciXWi5jyAlmErgqj196oclELFKZoIUwlMFSFFg05rG7q7qE5CV05Iepu01gyzfEFnfSN8D2NqLb93ZeLXIwGkd2hbYl3FxfmYH/3gXrgRPKAKxsPneDtBuRzvzFIyHCOC0L+VETLuotvbNUvNYesh8XKF6H206vSsrVCRRgF5NaMoFqh+mK+GxKFfO6/kn5Tf/sjAu0L2ChG+eAkCCUW7xCCJdNDI7fe7PH38EGEXYBWlauCAyHu0M4h60CuWwE3RpDSOuLlDZ/9DLo4fMpkckVhDJjwWTVkZlJzQzSLm558yvr9D53v/G+g+2Iy1vQ94fPxb9u900D4ikmsQbcI4h64DlwfsU62THLgGHlEW6DiuS4ZlKeiuIF2RD6OaLObWTpenTx5STab85Kf/hOxsrmS+kp0tKD0qVXQ6HbCTELRJFrCArwA8XT0Ed1wpwDvIi3CjGAN5gcwyjh98QRLvEsV7IQjMBGaPWAy/wM6OSRODllBVBVY6rBaUAkrVoNE6hPZezVWpEDIiErIGhUmEaCBchRQepR34BTjDYnREZUqytTvB+NknNdWSFfrHX2sc3zxgln9uxpOvgAReQUit9nwCqdRqKZYkCVJCPh+Tpg1ckJtBi6Xq0PJih69xgFNZOAp0g7SzwbzRpijGJFoFog/gKdDCEtkxdnYK0yG02qBbdNZ3aeaP+OzTX3CwsUtcXdJ0FlOCmU6xKkdFEZU1lKYkzlKiKGK2mL5W3IeNifRXmUeaglaaUZZzdnd36TRb4DXTo2MqIrxOcVHCoghaxEmsgui4KUmihKIMeuxhN+zreaKrs7/DOUOsNaYsUTJM22Id6tyjZy/YufkRQrZCBnVTyvERs9ERspwRRQqFrYW+PU4ocieJG+s0uzsQ1cAAYVaoY3ENTe/RLL2Wwg1SsZiNSZIEFbeAuP4/8ps4av+AnBjHqzlalmVoHTMcjtlZ23kVUXUN1h22bYGwLaXGeYGKUnob2yxO18gXJ2RCBYCiD/ZQQjmcWzAdndAfHUFrHUjpdjr0x1v8/Of/ncWBIbINxOwcJTOsmjGcX6KUot3pBPyglEgdYbyrRXFC0Ekf6tGVtRQWIS3WXOCqBevdDtZ4ZienzPMcGTVZGHBRQl4YKmNC4HmLr3JipUHp1czSIZBe1kqaS2RMSRwptPQs5kNaaUySCE5OXjCdlfzwZ/9zkEEmh3zAxekL5sNLYiHRQiClx7oSoWO8kxgX0exssra1w1K/4q0l9nLILmUYXTnHcDik3W4Tp+k1FAXfssATXM3raumKrNkibTYYTcZsVQaRuPqSu6t5mr9SjTI+AMmXgZf1t8g6m0zOHlE4RyoFSgdQo5Ye5SsW0wumgxe01vehuYGIG9y58yNOT87Z7He5c3gXqgaoGPyMzx98hnOOux98gOr1grOKV2FxXlZXdYwXV69teaM0wBcTKOeINK61mOu6LWsGzbSkDTYI6qi4rsWqIKex8kNAh7ml13W9puumprYtaET4yRlCe2wxQihDp7cRZmkKcDMW4yOGZy+QpqSTNpBuQaQsVe16ZIXG06LT2SHub3+pJlvOUVelkiMEnAzTY5fnzGYzDjZuIeNAUhLy6wu+ryXw3qShEphTMe12l/OTlywWC6LE1r+6vQYX4RUYTsj8gRJIs0/a3UYkGyzKC5LYBV0eDB6IlSIvR0wGT2mN96GwmChFN2M21m5zdPyU2zdjRCeqv3ODRqvJcDjk7OKCLZ0i251w9DgZIMjLQKg1fq8HXlGM0FGGSmIopqFbzqfhW0+nEDdqoEOCkrVMBDLITkhXH2UukI+IQs3kotWIQzgXnHQEiM46LC44v7hkPJuzd9gO2UgDxZDRxWPm4xNa2tPQMWY2JIkdiKr2BEmJ0y2a7b1g5en8K5uj65lPLmtLv0IFMJmM8Y7gTSsUX+ss5U86sN+CoL0SebkWRkLR7fWxCCaTSY2ps68NUsMMz4kVWLnG9segGzT6uzQ3blDILOwWlUB4j7eGSDsUOYvJS8Znj6GfoTtd0B0Ob3yIdylHZ5eY+SAU48Kysb1Fq9Pl2YuXfHr/AXZeAJrZZFYHgL76KK7p94naudsbKBecvXjE6ZMHvHz0ORcvn3L09AFnL57ghhdgimCJYDyucpRG4u3ye9cmJULXwAh1RQlQVxsThKTIDePJgma7T9ZZq0G1BYyeM758jLQzYjy+qHBFBTVh3SAgatLtHZB19sKKzL8DHSMc8pq+CrbiYnBJ2myQNVrhPaodMcU7nn+5wPuDYdtyNbNrd3oonTCZTGp5fFP/ku5afXeV8QJARxP8xGOStT26u/ewcZu8ljJyzuFMRawcsSwoZscMTr6A82eQz6ESxLrL/v5tLi6HTMoZJMFqM+5vcHjzLuubu5SV43IwAiTNdhtrHNYarC1x9RNbhoLdzkhjgXZz8tEJ5y+/YHj6lOHZY8rJCbYYMR0c46pZ2B/HGnSMiBqIuAGqifdJgCS5OsM6j/dlPWYp8S6HKFhDURScnQ/JS8HO9i2IgqoT8wFnL++zGL2gqQ2RLajm89C8mAqvNMYpiNp0N25BeycE+nIOdyUPcFVir4hY9WzTGIaDEe1uD5VmtSrC19dY/OkDZP8WAAGBpbTKZ85BnKJUxGJehM7Q21V4sTpa5erPbikOSIT3MTTXaa7t4+MehZNYobCu9tQVjkhWuHLIYnxENTgK3AMCm+3WrXucXQ44Pj/F2ByKEkoPzQ43b92l2epwdHrG8PICpEJF9TOWyARk7CBxkBiIDbgJs7NnzM6eYcen6GJEMTxiNjhiPjhiPDhmMR0EiTHncM6TG0NeCQwaXBaePgylfe2I5OUCr3KEKkAbnFuwmE+ZjKcIYjrrh0Aaiv/xKZenj6gW5zQjh3JBOaDV6gTlKKkphAbdJOtu1xRMhUC/Sp66hvFbbXEkNVTeM5/PaTbaICKsk197H/pnh/BSPECsQJfLkUp9PFWWnd0DZrMFZydHgAl2ATKQcYqqBAl5ZYMP19IN3TuEboQLHvU4vPsjiDssjAKdEqdNXFWiqOg2NDE5j+//GkZnYVYnDCKS3Dg44GI4ZDyZhT2lC07eKm3Q7fbRKmY6nVLmc6wvQVQ4O6MoLnF2CHIGjCnGT8mP7lNdPEXOT9lIHaq45NZOlxubLVJlubW/ST4bYSbDUNrJIPmqI1XTPyU4HYp/Y3AmR4gCIXIW82OQMxbzY2QKj5884uTkjO99/A+guzApocp5/NmvmA+PWWsqTD4BX9HvdJnNS2TSZFIISLr0d28hWus1ilszWxRhC4NYUUclPiC7IdSgwjK/OOPp0yd0Oh3WNzdwlUWpBFeXRN9MV/satfFNOs1u9fKWBmuaJGvQ7XYZnJ2wubOFSHTwZ826pFpTeYeurf9WtGZXu9CLGNVcI+vt4aM1CrPAOksqQpPibIVzC4SaU1XnLM4ekXX6oDrgBLdvHRKfeT753UP+5R/3ArLYBNmM9fVNpvOcFy9eMBgM+ODjD1BJhNSEuSEGa2Y8e/KIoycPaORDxOyCRuTJpEWYKeU0p5xPGA3nWBkzFyNykbEZtdANiZQpkqgGHEAxdyQNiYoj8AWX5y9JUmi2MrwdkTUyzl4+ZrGYBNdzHcGshGYL/+J3uMUlkcsRJkc5i5YaLwWVlRjZoBIRurVNY20XWj0QGuMKkqwR0oKoTRBX1MRgohy0YxzGViwWC9bW1vBeoKKE0l8xz75V4xT3WkfrawFnLyRCSBrNNhsbGzx88Fv8YoLI2lR5QZwtG8Ip7XYHw/XAC1hXryPirEe8doNG75DK5eTzQPTR0kIVtEGktCzMhJePf8PdtT7s34YKoqzF/uYB93/7mKePn3Pn1t0w+nAW3Wiwu7uLcZayzPnPX/w7WRbTaGpa7Yx+r0WWxezs9ukmN3nxy1NssaAqK3RdixW2ROiEKNZcXp6TqxLdGeCrOVqZoO5JRWV8Ld4j8UXOdHTOy+OHzBcXxKlHR55Oq83m+hYP7/+WZtqjt7sdSgNrwOScPLuPm10S2RLhKoQPiqcWT+E1pU+wSZ/u+iHJ9mHQy/BV7ZsbYY15jRvrrrSVnQUpmE8nlGXO1tYWsm50jBVBmUF+ywLvKtdZ/Iq6KLHOBKfrJKPTW0M4y8mL5+zc/TAsnlc4OLcalUl55XDqfTAHEUpBY53tg485q2Ys5kMqb2jImCgS+DLCCWjGcHb2iLOXXTa3GoFkYySRaPP9D/6RJ198Tq/dYe1GVhvaVjQ6HT5qfcx4PODps8c4VzEaTRhcnnF2qul3WzQaKZmOuHXrDuWgCeWcSBm8mVNVBU4q4qhBN+mw8BlZpwU2Jx+fEUUtVNokUhE4mI+HXIxOGY5OWBRD0kwgrGc8GeOLigef3EfLiNsHezAfBmmKZsblb/+DwfHnJGZChAjuST7o+5XCUwrJ3LVodA/p7nwArY0acm8QIgyp7VIGqh6feGzQiFkascynjMdj0jQlbrdqUIFASf1n0YH/4puL16lvzoEVHiUVcRyzsbnGi5dP6W/ukHQ3gsuiUiRptIKFyKV0ghJ4G3gDzkskCY2dD2kMzxldPqOs5lhniUUQoJHGIxJHIqacHv2W1mZKdvBjqGK87XPj1g/IJyNePH9CHGta2zuYRR7crJOUVqPND7//j3hvWCwmDEdnTEYXDC+mnJ9eok3BXiMlbW/QiCWy14CGCrM8Xw+Q54ai8OQmYnDxkvE4J8ua3Ng7QHXXKQdTnjx+Qmkr9vd3abR2cL4kTiLiLOGTX/2S2XDBv/zzD2nt7sBgCE0Nlyc8/uIX6Pkp7ThHC4X3EUoZnHBU3lLKBBv1aG/cI12/CTLBeYNQERKFNS7sxOsIcs7hcSi5WkxzcXZKVSzY2tmrC3fFbJETZa2vcWfxxwae/8MOW/+auJpzbkW+2d3e4fL0Jefnp+x3NwLcx5ZkSauuCt1qHayExKtQCFsHOI1sbNPuHTDqblMMhhRVgZYC5RXeBrvzTktyMXvO44fwUXcNub6DmKVQSe598CH/9v/8nzx5/JAfbG2hG01cXtT8ighTGXQc02hv0Gj38Bt7LPIZpgr71osnDymE5GI8RZydkyUSY4MfWtrsBDUmH6GiBlVhMbMRZTVhETsa+YDHz1+go4T9G/t0ttdrObMaKlYUVDPBrYN79HcOwwVvR2CHPH7473h3ScSUWHiEV3gn0TqiwlNYg49TmhsHtDZuQ3sDi6CocqJYopGUxhLrq7RlbZ3talqAXcy5HJyTpjHrG/0VHNtaS3QNOqu+jRlvOVBZyrmIpXyFCJVbs9tmfX2dy8tL1nfGxFkPU6PXja0lt3Ar71tB7aG1pGv4mHRtj/XdAwbVEWY0DnogTiOFJDdzkqYmFnOGl494+uhTDsVNZHQnEDCaMbdu73N8esHLh5+xd3gXmWZh2KtStKhCR6MAqRBxRCPu1rD7gs7GLriC4bMvOHr+OaPJFFtVlLakYSSVCV/XbluyOKHXTIiEx07OOLl4zsXFMXe+/wM6++1QzM8s6BbFcM79+w/I4nXu3b4RtifzMUQF8+f3OT37Pakao1WBFgpTerwVqEyysCUVApGm7B58QKO7DaQBjxhdARCiKMI7Uyc3v4RBgHdU8wXj4YDZbMbdWzeRjcYVOb/ZXsnJfOuOWrmi8oShKCqQsIWKguwCtSqATtnY3uGzz58wvLxk52CNWIEi+FFIHdV32tK6SF3VHz7USLQ26W3cZnb5ksloSuFzEh2hcESVxVcV7UhRVYbjR5+h/Q1u3L0DrR3I52zfvYcxlk8/+TVCCHbvfIA3tVyDTkMQ5jZYDkigyjGzIdPFhPsPPqez1mUxnTAvE/pra6y1WkRa0m43GQ2HTKdTXFVSFh7pFVrCoioZTqZIoRldDtjsD5Br+7Vb9pzh4JKqLPjo3k3keg+Ky7C0Hp/z9OHvkMWEYnZBX4VGylmF8wonUiqvKbwi031a27dqlLFEIfEirimcHqGCyXS01NqrByR4Q7mYMh0N8aai0++HrYqOKcsKGWeU9eX4ZgJPvPnPSxHt0FB4kvr4EFwJXTkHQkcgUzrru3TPZzx/+oxEN+hv7EAxR0c1UFPUQEghapBO2MxK4UmsR0YNxMZH9KY586lnevkUaXP6mSSyBsqKyCu0aHK5KDl/+Etaoknvez8L0/8C9g8O8K7iyZPfIXXF9q0PYTENflRehpWqKYJirTIwP+WzX/+S9RsfsfCaxuZNbu38M51uN2R0a1DeEadTdtoNGA4Aw9nJMdPZkNvfv0cyOMc8ecLtmx8i0x4UwcX30dP7nJ+f89GH94gbJYgxpBWcv+To9//B4uQY7QrW0jZNU+KLgiiKsDLjciJYyB4be3fZvPVjiFs1RN2hBEhSDA5Xs9tkpJiVc5pxhI7ALiZBzKuc8/jB7/lv/+2/Xa3s0KgoJq/vf/+NZjzxFf/k6yHpK7PpGgPha9l8pemvr5PnBRfnp/Q3NkFHFJdnJL21mmUi8QHDEva4yxoyjkLbH/VpbtylMx5yls9Y5MekFGgZ7nThguFJ0ztKM2Ry9lukzOnc/il0Ai2w2YjBGX79y19wdzrnzg9/BmUe9I4bQXGTcsLs5UNOTx/TbmQcHBxQygQdR6TNbKUb7KVGeFBJB6yGdA0SiTsfsajGkDVpAT/orCNbrbAOXSw4Ozvn0bPHJJGk1Y2hGwMzuDxi8Oi3TE6f0ZIVsfLoag7WURmHUx5UhEsaoPpk3ZvEO/dAZivZj4AsBoGtJZlt8NqNI4piivIWnUZMj1/y9PEX7O/vI1UcuMe1Bp8TEvEXOGb/Ini8r1pzOOtZX1+nzAuOX54wOD6mv7dPksTXQjjUd6rOmBFXYo7OBbtMsbHFenmL6eQli+NLplVOSyuwFcIV2KXJsoXZ4Cnj6YSbSUYr/j52POHs5TH99jq9rmY2LXj24AH7e4fIRmBbLQbnjC7OOD05ItYRtz78iKSV1YPlAorBCr8mhAYXQ9zG5TmmssRZA68kUnnwC6IMkM0wopjOePLiBaPRhI3dbWItuP/5fT7+8Cb4nPL0GWcvH1KOT+hmnqaEshhRYJBpgpURC+uxcYPe9g3WbtyG9hqQgUxBBDdL5x3eBxxjELe0gCFRYd3kFjOePn3KIi+5c/cDSNLAPF8Fb9iEavEtrfH+MOiUAKFxCOIkZWdvl/FwwhdffM7HWtHc2gkTdOuvHGdEODmWIuqmJqkIJ1AyIlrfYv3Gbc7LAfPLObEM0mLSeDyGSCmUcpSiILdjnj/9lNZ8Tl4IEAm3735IvLHN0aOn/P7zz0B6Dg73GA4vePzoEZGM6G6u0232aezuBZi6n8D4FDs8gmqBShKQGfMqJlu7iWxtglCURUnhDIt8RHH+jGR/H6xncX7Bydkpg8mU7vo69z68RzGf8Iuf/988+GxOUxWI6RnSzUl1QeIrVFUgfEnhJXHWwriEqRG02l1273wEuwdgJUQpXiQrDzKBqrUFQVCByykXQ+JmmCJ89snvGIyG3Ltzl7S3HqBoMq69Qq7hOBR/pvLLN53xkMRxE5xBJw1u3Njjs08/4YtHD/jR5lodVdE1geVatEeGetcS+J1VrcGisi79mx/izYSTasp8cYLHEkeihloqrPBIYRDKcjJ8yfFozt17/8DB9/4LpOtQePr9Te7ctTx/+QXGj5nNxzhVcnjnNu3+Hm7uoDDABDd6zvD57xkefY6qJiRJwsJnXOYJjf0f8b3/+r8T64xFMaPRyrgUlqMXX3Brqwtec//RI+aLgv2bh2xsbYOMSVpd/uGnP+WLT/+T8fkJYvKChlnQiTza5SgzI5KCMu0zqCyVh2R9l43bHyG3DyBqUuUaJRNMjZoWXO29V3JZoiJWBmYDjl6+5OzshI2NLbb3D8KgGlXvciXO11YEwgWrB/F1R8JfLeVJitKDSLBOUJUVne0tbt65TVHlfPIfP8flUzCzwAvQHqUFsQxq6ZqQ/VRNwyusBxJo9Fk7+JD1gw/JVYepi5lbTSUTDIpFXpIvCpyDtNVh58YhBx//GLIOzCt85UjXNjk8PKTf73M+OOf04pisEdFeWwNRqyRZA9IjbI4wMzJl6STQjgWdVNLNIvLxJdVkiHUFUgo2d3e5dXOf+XTI+Wef8vtf/hrr4Pade9w4uA0qZlEaIKbZ3+P2B9+n2VljXjhmeRW0nGVN+9QxKusyLCSFzNi98z16934AUQNbCXTaxvgwPHlllOoJgkXVIpB4Is8X93/Db371H2ys97l97wPc0tsMhSfCeVk3jApdK0Srr7nWU//6r//6r19vGfdW+x6ck2gdmFzOWlQkabaaYHNevnhGZRaYKidRIOPaHnMFfxFIYetjwyKEQy8bmUjTTDOsNZSlIc+rsBz3EbkBnbbI+jfYvP1P3PjwvwTFdqNxRiDbPRAOZ0rW1juYqqQqC7RSJEqR6iUPw/DgV//G88f3OXv5jMVkiClz5nnBeG6YlwLd6DGZFwgknV5QmI/LGZenT7k4H1LS5MbhB+wc3kHIhLyyqLiBEAmz+Yx2b51Ua5T0gYG3EraUWJkx1+vYZI2tvQ/YvvcjaIaZXeVjUM1VSbICMfkqmMqUUyiGVBfPGR0/4+nTZ0RJyocff5/mxjbGCaRO8T4KgE/UCkwghXhVLkd8545aSRQrFrklSxPiTFIthkSZYvfGLqPxOZ/+/tdsbWxQHszYZo+ouVb7Vujaj0wGSWgpiGRQh8cSxAfXD9hTAbZ+UggW3qCVQEaO5tom6wcfow9/BulmmNMJjew0oCyZToe01rtAzO7WAbHSDC/OOXl+THYYE7e6uPmIfDanyC1epIiGoqKkqAwlAWg5n04ZTL/gxt4B+AI3OOHJ48dYHxE3Mn74L/8VZ1PMtEBlimbWwyIpceisj/Elrb0PabWbnD5ocfH4t5RTyAgq7cN5zM69j9m79TEkfTAKdEYiMwpXImXYf2vhQZQBm2jnUI6hGPPi6UM+e3CfztomP/7Hf6LV7oI1REmHvLTouK4P5TW83nWR/K8x5Qn/dVu2vGOtYWpokBQghEH4OYg8HAG+5NNf/QfnF8dMhiPa7S5373zA3uHtYJpX2vpie5z1oBUyXgINKliMIIX5kwd8/rtfMro8o91scHh4yNr+IfQOqKotbNQjiiVKLQGpQVTIGxNmjcUMnGE+POXh55+y3msSKcvm9z5i9uglg4tzxpPLoOHiKqqqJNYpzVYP7zQbW3uk2zvQbDB5/IDT8yOKcs73/+lfoLkbEMiVwEmFVQlexRgEzhsSAdLPUWYMi0vs4JjLl19w8vQB5+eX3P7+T9jav012cDuQiipFUYJMW0RRY7kMA18HXT6hujzm9Ogpw8tzHj9+zP7NW9z7+Ee0dm5A1MY5iRUNhM5q4SRqY5uai7F0FBK1kLr4jgWeJzStru5UhQDhF8C8VvcsoJrz8MHvODs/oZVlCBHU3LOkwf7OIco3aDX7qHYPlGaeV0xmM2xVIDC8ePw5GkMr0fQ6Lfr9PqrTgSgD2QW1HkapEqx1eDdFUBHLYH1OBX62QDQzoGD+7DMePfoNxfyCu3fv0v3wJwHIWcyo8kUgrrcbYdsxmkCzFQhDw0ueffopL85OOLx7l7279bhjZCDpBPKNVKHeDbyya+eCIaJcqbgzvSQfnjOfjHn69CUqzsjaPVq9NbLOBjprIXVwKRqNB0gMtpxTTi/JpxfYfEIsHVprjI9Z29pnY/cGdDZqf9s41HXEK83pv7nA8zUGQK3mQlXIeNRZTzjK8RmPHz1gvpiQxpo4jgMAoIL5ZQE+oiRYI3kVgYrrutLRTBN6rQZb6xsk3W6t3B4qHu8azAqJiAL9ILyGGZDXQwcFNgoI5aqkunjJ6dHnXJx9QacryMuC/sYHbGwfotbW6qG4qzFvvkapOLg45/SLh0zmMxbGk+P58Mf/ADqhs30LrMLnBZVTiCRDRg2sVIEM4EE4j8KghUNKGxqDfI4vcoSrmI5HXIymzPMFpYW8LBjPpsznU/Zv7GCrBRpDpxWx1m2SKM9sOmQ8WXB450fEWQ/R7taqUWEN6USCF8kK6rFUyV8F3kpCSnw3A49gmbqS/hfLY5ISyFmMzsm6TaBi8PIpx8fPUcLT63VpZy2y1hrkjnnhME4hkiZRmqFrkzqtda21LFeqENbr4JOmdC3GE2Ix8HsXOOb40uArh046+PGUkxdHHL94DHaMkHP+4WcfMxkOePxsjE7bbG5tsbG/F3atizxIVOiI09/9juH5GVII7v3wR3gE/8f/+O/s3r6N1AmNuMfOzj6t7V2WbrJFXuGEJk6zFcrX134TYmkxVRmweeDmutoo0Bh8/WehBESS8+eP6XZbRK0U8hmXZyeMJ5coIUizDpsH3wPVCF4ZIqpV8WtfMxHV5lWv+eD4P3x79e0NPF51yhB1txikLCpwFd4tELECKoZHz3jy+HPAs7u5QbfZCGu1bOkhFuOKErxCRlE48pZmy0IHjREZr6hFugbz2mqCVDbIw4qaQV8ZLo9POXr+Apyn32tTlROOXj7hX/6Xf4F2GwZjHj16wmh4xo29LTbu3Azb89MzBqcDnr844fDwDt3+Bqyt4xcT/t9//zdu37tNXlSMJiVKZjSyJv1+n7W1DUgbV2/1UihZqPpYq/emFnAlppqhI1HbxtugBmrqgNQqfB5wo0uOjo64HA7QcczOzh79nRsBGCvCPtpLFTYuYbhRv0fyy7H1F+ho/8pdrXtD6NWNvwfvNUJleBuRDydkaUxv50N6vX2OXj7h+PQF55cXtAYDuuubNDsb6KSBTJKrK+J8CCJEmEsteQVLJJBYoMQcFdWDrsrj8jmT8YjpbMjg/AylBTdvHpIkCY8ejch666DbYR3Vj9ibj5icfc6DXz1gcfIJO5sbDEYzHj4+YnP/Q7p37kLaAQSL2ZR2v0eaRWzvbuNExrNnp7x4/pznL56ws7nBzvY2rayF9x6d1YERxeHG8nHNABMBpZREuCClHY6NJIK0hq6bkvmLE45Ozjg7vyRutNi/eY/tG7fCRgKFJcb6AOiQ4soyaqnP96rmjvzag+0bDDx7LfBUEGOs6wjhJYOLBf1+k6wdthuUFcQZu7f7rG3scHL2OdPFmNMnj9DxCRvr26ytbdCI0zqlxeENcbLmw4IRjsJHSD8nSkagcigEbloyHM4ZjUZMpmPycsLBzS36Gz3StQ6D0xOenR7zgx/+FJrbuNkY2QhexmsNT3V2yuDRF7iLFoYMZcGyXPkFhI5qd0haDV68fER/rcNgOmHv5j63791kOrjk5dOnfP7Zr2nEEd1ul72d/bCkN40AEpVJnfU0XkqUVlgsZTFHVAXOzHGLOflsTJnnnJ6e0u6u8/H3fkyzv4lK2xgfYysdJC2C8EqgFjjCLluEN0C8Q83ff/0J768XeFc2Rf6N57Dz0O9nlCVgHXGqQ+HuSrCQdHc4aMfM5kPOzi+5vBzw6PFTnj17QSdr0sgy1jsdkigiqb1sgyVUCVbh/Iyj55/gihnTsWUyLnEmotvtc/vWPdrb/cChLUYB4OXCeq6ztg4+EF7iquLy/JTZ+JxeIslihV8MsHZGK+qxGJ3h7QLhKpyMkDpmfWuPz3/7nPFowvr2BwRXcEOrs8aHH7UoZlOGl5dMxmP+85e/RkUxSZKRpC3iJEPHGTJO8FHEzJbBPNkUVIsF+WxElc9QDrSU3P7gh0RJk6TZRSYt0FmQyqivf1VXIlIuu1aBFIJv4vFXHSBLYl73QxPiCk/tXA2OWLrxeHetWZAI2aXVatFs7bG3X7KYzhiPhkyGAy4HIyaTCa4qqaoKYyvwAhlpoihBa0lZLUh0Qqezwf7hLq1GrwY9Bqt0qiJo0M4rXjy/ZGNtl7QRFuo6Cqu6PC8pFxZlwZUlylY0tAa7IFMVl88/Z/17PYRNiFRCmrRJG1scny7orCmIMmxV4JwmytZIdEUv3mT7gzaTizOKomAxnzKbTRiPBlh7CjislBRC4KVASUkSxTTaPbZ2D2k3W6RpAx01lltaPCp4bSwzHFcsMXn92r91cyr/EqXdNxN4b/0lV/ok7g2N1NX/L8ug2KllTKwTkm6TdquP3d4HZ8jzGc5WWFPiTbB31zJ4cEkd3nRHTKJSoqQDIg0FvXOh3fYash7P739CVSkODvZqKLwPtWQxxNqKJI0QY4t0lkgIbFWQJGnAvJkFeIerKlSWksQdWq0tRoNR4NR2FEoleGdD9tMxIlLgYtqbB7RxYHKcKXA2B1/Vlk8C4jToonhR6yRrlIpQ1GtIXzcpXnLduGupzCW/JWv7bwCd8meGrorrwFxyOkDJGBVlgCdu9kJGdaZuMmpcj1wKg9frt6VEmKs7QWdrJr0CLM+OX5I0G2zuHVCWBuEVUSQp5mOsm9NoRiymFodBx5rFtEA3Y7yKKHILFZjKo7IYHces9Xc5PxkyuLhkJ8tAx2glap+3wMBzzkHpAhJHamQig9Uoyw1LKB9joQiOYoqlT5v1Hu/cWy2fvo2Pb1XgvVtxSKHlUkfO4azDelvXKBIlfDgufQ2tku6qgKxlcr0XGC/BBmFrvcytS8EaBYOTY6yA/voaSIWTDmccUSQZTQd4WRGnkrmvcMKhtMB4SywlUdpgVBjcokRG/aCR4qDX3aTTOebs7IRur1l3yircIKoej5SuVl2SNVLE8AoKzgussYiVMLdCoGrifDiCxdIPV7zjVHkfeH98e7JUK5dCIlUYxcjrOhrWXF3hJaTCXTPQU3HgM9d2AsGp3iEdtULUgvuP7rOxvcbmzhbWlaRxRl4Y8CWT6ZA0kUjr8NIiFDgsQkkcniRLcQsYDWf09/fCCKOsUFGDw/1DfvfJ/8docB4I3yqpWfwCRByy1QoJ41YD5hWpUEAcydeORBmoPG/1i/WvF3PfntPr25bx3qq9JrgyBblCSr1aDy4158RSZVMHRK0MO0l3raiW9ahP1mKHTlqOz46YTAesr3dpNTKKcg5Y0iTGWcN8PqXRyjDGrAzkSuOI44TSWJSMSNOU0WS8cigRLpA+m+trtFtNJuNLJudnIaNJUVur+tp5WwQ1CSMwlcNUYI0I+2EfAVHgoHiBsR5jfLjXvKrRO+ot1+/bF3vfnaKgLtWWAWhceDoX/n7N6/etR0sZLGjDm7Vy8DN4X2LKKWcnz9je7pJlAshJpWcpSF3OZxRFRbPRpSjqjllFFJUhThuUpsJ4R6fXZj4f4+wC7ALZUGDmIA23b+5TFDOOj5/j83l99d2VwYYQCCWRWqGjBB0lKB0gUWGhH5REpYjRKkXrGK1jpNTIlX7dd+Mt/U4F3grl4q+ZQdXTliUF9620KBHKqqhGNAfilcM7Sz6fMJ0MyWdDbh/sooUBM0PGPiBEXEk5HUMFcdymKgEf1+oDEEUJ1lqMKWm1mlQmx1RzTDkBsQi2otWEdKuPc47B8IKiKK7q2npzsFy8LH+/JQ7BuWBx9Qo27vo18VcVxXcmiXy3Xm4Q71Zy+XztDRBXT9709OFrpKiZU9IhpGMyPOf+J7+h28qYji4opgOqyQA/ugx2AfmYxXhIK+tCqYh0A0FMvnD0en0m4xlRFGFsiWhEpImgLEdoVVAOX0BSQHGBG11y69YtIp3wySefYGYz0DrISYhQr65uoGs3VljdileDzl89l437u7dG367I/M40F6IOOvcKFNa95f6RXxYEJ2Ddgju1x5kioGSkIdYR/V6H8eCIcnpJlkaURYFyit3NA+Iowy1mrHfXgIhy4bGVq83tBEop0jjBmCAra+2CJ49/j1IKXxX4coZAMSslOukwm+U028nKtXt5o3jenNGu90p/Kw/93Xq5vrZhkW+4o9/a011N72NZ6w3XdlEyLPLa7S4HN27T/sFHmOkAHXm++P3vuTg5YyBi8llJaQw/+Z/+GdwMWxm00EivcJXBlAYjCnqRhnbG9maPR8+PUUrQaWXMpxN29g7ZybZJ21sYE2aScasNaKytrhpa/1qZ6r/yjnwfeH/5rHfdlsCtVmuviqO9LRCvWTktC0MAr1FRi3Y/Am3QqYGGIstaKAbEWjKtFsRaQ6phMMOUOa1IkTgJVDhncKZkMhrSd4a1fpcvnj7HOU8jblHg2NzdgWgLso16JhxWW3hQOv4yp+FNcqvifcb7xkJP1Ni1q4/vek/8a8FoMdYgiMOb7SRlWaB8FMxQihnzqaEhFbOZwThB2mixt5fR7baDVGs5wZoZSlfgDFI40kRRao31wblSrPXZ2thkMZtgCsPwbEA1mhJt7oOTOOuxTiCNAyGRUofj1r8t0y1nkfINv6i7Nu/jraXH+8D7i/dB7i05MtigCx0m/n4JRJBJPc1wEGsaawrsDKkzdNKg0ezS7Pegm4LM0doQR4EbludjnPR4FeNsRSOJAyVRw839mwwG5+TTMVSOxSQnutEMw+JYIlnyWGVtO+tIYvnuxuB6xn6l5HDvM95fdI7yNj1U8a7jyF1N+Os32i7ZVLVTqarbR1solIix+ZwoaZFmOblxNJEwneBmL5iOjnBujowqrFsEgLoUFEWOn82Y3f+cKu4jkza28FS5pdPqkyYt/Kxg6iVJnBElemWJJCVEiXzV3uiVoPNv+J38GwLu/a72r13wXQWcl9cyw/U3Q1wbsEqKyqG8DAJUNbWhtI6skaE0dDf3mRclxxeBXHN58jmZOEWVZxSTC6L1NiLRZFEgHJW5B1dy+vIR57NnrO/dQUcNvM/ob90h3r4DzTUaViG1RqDIqxKtYpSqdacE1zze3nRzvesO+25Nxv56vNqvK+t9VeC94wi+sn7RbxxXVKYKYt6+oiqm4C1CWBazMcXlY/zLn6OmzyinQ1w5IcaEXCokhYuIW1uUUZ/G+h36N34A3RtAMyg4pS2cD3xaUQMbvtKOyfPaTfS3M5LV37ks96a/iz/sjRFf8b29r7tjofAqQgiNUB7hHHHW5Ph8QFpM8cYiibEqwqugE2wJQtVlOUM0CvoIaPZAdEA0sRa8XB6df6D/l/juBdTf/lH7l4hrIVa9s1Kqhoh7kiTBt7rMRQMnOziRI3xFXHNPvfAYoZjlEpk2yVS7NiaOQepgFuMDKPVvaibyPvC+rsDz9ZjGo2SEWFr6qRifNmhs3sDPEqrphDKfgrXo2twZFZH2u7TWD9i88RF0dsAp8tJgpCZJFN76FcdBvPbx7+5af6dqvD/74d5ZDzln6rmyD3DzWgzXYfHVmGryEpMPKGZTylmAuggPkYxARmTtNRqtdejtQNwBIuZGQhQFTWLPFfj0tSz7PvD+jgPPe3ttXubD34ULH32JkhVB+aCu/B2hJXZ1N62yGqWgAplcJZTXfqomUAr/ngPu7/SofXehfnUP+hohImv0h0RIxdRUSBkRSYVG1zAsGVj/vlYvQNSwfLFS1OVa4/33HnB/pxnv3dnQWlubAvtrxJmgYRKoPQEbs+LLeYHyEkFNQqpsYIzVHWllHVay+l7R+9bifeC9+Qh+/c9Xj6Ck51eevEtVekk99PVvHvP4K7OEWlby/eN9V/uVQfcmR+uvPrKvfz+BQ70SlfL9JX8feG8LujeTzxWv6oisst3yE68jSnxNZXsjhvB94L1/vEOwhtcC7fXPcV1d/RVFhOvso/dB9z7w/tiH/3Lp9mqh5r7ic+r9Mft3H3hf0tuS7852/s0BeDUbWX7aveGgvqZd8j7O3me8d0el+JP+Sz1uXkW1rQNPvJbn3gfg32vgiT/kH+Wf9PXiFeU/+aXAlH8jt+Yffnm/um5+/3j/eP94//j7ePz/EdyEbv80rpsAAAAASUVORK5CYII=" alt="Agencia Nacional Digital">
+  <span class="chapter" id="chapterBadge">Portada</span>
+</div>
+<nav class="dotnav" id="dotnav"></nav>
+<!-- 0. HERO -->
+<section class="section hero" id="s0" data-label="Portada">
+  <span class="hero-badge">Manual de usuario · Versión 1.0 · 10 mar 2026</span>
+  <h1>El Panel de Administración del bot de WhatsApp del FNA, de un vistazo.</h1>
+  <p class="sub">Cómo se configuran, versionan, activan y monitorean los flujos conversacionales que atienden a los afiliados y ciudadanos por el canal de WhatsApp Business del Fondo Nacional del Ahorro.</p>
+  <div class="hero-stats">
+    <div><b>15</b><span>capítulos del manual</span></div>
+    <div><b>2</b><span>anexos técnicos</span></div>
+    <div><b>6</b><span>tipos de nodo</span></div>
+    <div><b>2</b><span>roles de usuario</span></div>
+  </div>
+  <div class="tricolor"><span class="y"></span><span class="b"></span><span class="r"></span></div>
+  <div class="scroll-cue"><div class="line"></div> Desplázate para comenzar</div>
+</section>
+
+<!-- 1. PRESENTACION Y OBJETIVOS -->
+<section class="section" id="s1" data-label="Presentación y objetivos">
+  <div class="eyebrow-num">01 · Presentación y objetivos</div>
+  <h2>Una guía operativa para administrar el bot conversacional</h2>
+  <p class="kicker">El sistema BFF (Backend For Frontend) orquesta la lógica del bot y se comunica con la API de WhatsApp Business, de modo que el panel permite configurar cada módulo sin tocar código: flujos, nodos, aristas, plantillas, activación, auditoría y reportes.</p>
+  <div class="grid-3" style="margin-top:2rem;">
+    <div class="card"><h3>Orientar</h3><p>Navegación y uso de cada módulo del panel para el administrador funcional y operativo.</p></div>
+    <div class="card"><h3>Explicar y detallar</h3><p>Los conceptos de flujo, versión, nodo, arista y plantilla, junto con los procedimientos paso a paso para crearlos y gestionarlos.</p></div>
+    <div class="card"><h3>Describir y facilitar</h3><p>El proceso de activación de versiones y su impacto en los usuarios, además de la consulta de auditoría, conversaciones y reportes operativos.</p></div>
+  </div>
+</section>
+
+<!-- 2. DEFINICIONES -->
+<section class="section" id="s2" data-label="Definiciones clave">
+  <div class="eyebrow-num">02 · Definiciones</div>
+  <h2>Nueve conceptos que sostienen todo el panel</h2>
+  <p class="kicker">Antes de entrar a cada módulo, vale la pena fijar el vocabulario común.</p>
+  <div class="grid-3" style="margin-top:1.8rem;">
+    <div class="card"><h3>Flujo</h3><p>Conjunto ordenado de nodos y aristas que define una conversación completa del bot con el usuario de WhatsApp.</p></div>
+    <div class="card"><h3>Versión de flujo</h3><p>Iteración específica de un flujo. Cada flujo puede tener múltiples versiones, pero solo una puede estar publicada a la vez.</p></div>
+    <div class="card"><h3>Nodo</h3><p>Unidad de acción dentro de un flujo: enviar mensajes, capturar entradas, llamar servicios, evaluar condiciones o finalizar la conversación.</p></div>
+    <div class="card"><h3>Arista (edge)</h3><p>Conexión dirigida entre dos nodos que define la transición del flujo según condiciones de coincidencia.</p></div>
+    <div class="card"><h3>Plantilla (template)</h3><p>Texto predefinido con variables dinámicas que se usa en los mensajes del bot hacia el usuario.</p></div>
+    <div class="card"><h3>Payload</h3><p>Conjunto de variables de sesión que almacenan datos capturados durante la conversación: documento, teléfono, opciones seleccionadas.</p></div>
+    <div class="card"><h3>Activación</h3><p>Proceso de publicar una versión de flujo para que sea utilizada en producción por los usuarios reales de WhatsApp.</p></div>
+    <div class="card"><h3>Panel de Administración</h3><p>Aplicación web que permite gestionar todos los aspectos del bot de WhatsApp del FNA.</p></div>
+    <div class="card"><h3>BFF</h3><p>Backend For Frontend: la capa de servidor que orquesta la lógica del bot y se comunica con la API de WhatsApp Business.</p></div>
+  </div>
+</section>
+
+<!-- 3. ACCESO Y AUTENTICACION -->
+<section class="section" id="s3" data-label="Acceso y autenticación">
+  <div class="eyebrow-num">03 · Acceso y autenticación</div>
+  <h2>Entrar al panel, sesión por sesión</h2>
+  <div class="section-scroll">
+  <div class="grid-2" style="margin-top:1.6rem;">
+    <div class="card">
+      <h3>Requisitos previos</h3>
+      <p>Navegador actualizado (Chrome, Firefox o Edge), credenciales institucionales entregadas por el administrador del sistema, y conexión a la red interna del FNA o VPN activa.</p>
+    </div>
+    <div class="card">
+      <h3>Sesión y tokens</h3>
+      <p>Autenticación por JWT. El <b style="color:var(--ink)">token de acceso</b> dura 15 minutos y se renueva automáticamente; el <b style="color:var(--ink)">token de refresco</b> dura 7 días. Tras 7 días de inactividad, la sesión expira y se vuelve a la pantalla de inicio.</p>
+    </div>
+  </div>
+  <div class="accordion">
+    <div class="acc-item open">
+      <button class="acc-head"><span>Proceso de inicio de sesión<span class="acc-tag">4.2</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <ol class="step-list">
+          <li>Abra el navegador e ingrese la URL del panel proporcionada por el equipo de tecnología.</li>
+          <li>En la pantalla de inicio de sesión, ingrese su correo electrónico institucional.</li>
+          <li>Ingrese su contraseña en el campo correspondiente.</li>
+          <li>Haga clic en el botón "Iniciar sesión".</li>
+          <li>Si las credenciales son correctas, será redirigido a la página principal del panel (Plantillas).</li>
+        </ol>
+        <p style="margin-top:0.4rem;">Si las credenciales son incorrectas, el sistema muestra un mensaje de error. Tras múltiples intentos fallidos, contacte al administrador del sistema.</p>
+      </div></div>
+    </div>
+  </div>
+  <h3 style="margin-top:2rem;margin-bottom:0.8rem;">Roles disponibles</h3>
+  <table class="matrix">
+    <thead><tr><th>Capacidad</th><th>Rol admin</th><th>Rol viewer</th></tr></thead>
+    <tbody>
+      <tr><td>Visualizar flujos, nodos, aristas, plantillas</td><td class="val-si">Sí</td><td class="val-si">Sí</td></tr>
+      <tr><td>Crear y editar flujos, nodos, aristas</td><td class="val-si">Sí</td><td class="val-no">No</td></tr>
+      <tr><td>Crear y editar plantillas</td><td class="val-si">Sí</td><td class="val-no">No</td></tr>
+      <tr><td>Subir y eliminar imágenes</td><td class="val-si">Sí</td><td class="val-no">No</td></tr>
+      <tr><td>Activar versiones de flujo</td><td class="val-si">Sí</td><td class="val-no">No</td></tr>
+      <tr><td>Configurar parámetros (settings)</td><td class="val-si">Sí</td><td class="val-no">No</td></tr>
+      <tr><td>Consultar log de auditoría</td><td class="val-si">Sí</td><td class="val-no">No</td></tr>
+      <tr><td>Consultar conversaciones</td><td class="val-si">Sí</td><td class="val-si">Sí</td></tr>
+      <tr><td>Forzar cierre de conversaciones</td><td class="val-si">Sí</td><td class="val-no">No</td></tr>
+      <tr><td>Visualizar reportes y dashboard</td><td class="val-si">Sí</td><td class="val-si">Sí</td></tr>
+      <tr><td>Exportar reportes a Excel</td><td class="val-si">Sí</td><td class="val-si">Sí</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.78rem;color:var(--slate-2);margin-top:0.7rem;">El rol se asigna al crear la cuenta de usuario. Solo un administrador del sistema puede cambiarlo.</p>
+  </div>
+</section>
+
+<!-- 4. GESTION DE FLUJOS -->
+<section class="section" id="s4" data-label="Gestión de flujos">
+  <div class="eyebrow-num">04 · Gestión de flujos</div>
+  <h2>Flujo, versión y activación no son lo mismo</h2>
+  <p class="kicker">Un flujo agrupa nodos, aristas, plantillas y configuración. Cada cambio se hace en una nueva versión, nunca sobre la publicada. Haz clic en cada estado para ver su detalle.</p>
+  <div class="flow" id="mainFlow">
+    <div class="flow-node active" data-state="draft"><div class="fc"></div><div class="fn">draft</div></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node" data-state="published"><div class="fc"></div><div class="fn">published</div></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-node" data-state="archived"><div class="fc"></div><div class="fn">archived</div></div>
+  </div>
+  <div class="flow-detail" id="flowDetail">
+    <div class="ft">draft (borrador)</div>
+    <p>Versión en desarrollo, no visible para los usuarios de WhatsApp. Se trabaja libremente: se agregan nodos, se configuran aristas, se ajustan plantillas y parámetros.</p>
+  </div>
+  <div class="grid-2" style="margin-top:1.6rem;">
+    <div class="card"><h3>Listar y seleccionar flujos</h3><p>Todo módulo de gestión (Nodos, Aristas, Configuración, Grafo) muestra en la parte superior un selector de flujo y versión. La selección se mantiene al navegar entre módulos.</p></div>
+    <div class="card"><h3>Crear una nueva versión</h3><p>Al seleccionar un flujo y pulsar "crear nueva versión", el sistema genera automáticamente una versión en estado draft con el número incrementado, lista para editar.</p></div>
+  </div>
+  <p style="font-size:0.86rem;color:var(--slate);margin-top:1rem;max-width:640px;">Nunca se modifica directamente una versión publicada: siempre se crea una nueva versión para los cambios.</p>
+</section>
+
+<!-- 5. GESTION DE NODOS -->
+<section class="section" id="s5" data-label="Gestión de nodos">
+  <div class="eyebrow-num">05 · Gestión de nodos</div>
+  <h2>Seis tipos de nodo, un mismo formulario base</h2>
+  <p class="kicker">Cada nodo representa un paso de la conversación. Se crea con Key, Display Name y Type; luego cada tipo tiene su propia configuración.</p>
+  <div class="section-scroll">
+  <div class="grid-3" style="margin-top:1.6rem;">
+    <div class="card"><h3>message</h3><p>Envía un mensaje de texto al usuario. Uso principal: saludos, instrucciones, confirmaciones.</p></div>
+    <div class="card"><h3>input</h3><p>Solicita y captura una entrada del usuario: texto libre, selección de opciones o patrón regex.</p></div>
+    <div class="card"><h3>router</h3><p>Evalúa condiciones y dirige el flujo según variables del payload. No interactúa con el usuario.</p></div>
+    <div class="card"><h3>service</h3><p>Ejecuta una llamada a un servicio externo o API: consultar créditos, validar identidad, agendar citas.</p></div>
+    <div class="card"><h3>subflow</h3><p>Invoca otro flujo como subflujo y retorna al flujo principal al finalizar. Útil para procesos reutilizables.</p></div>
+    <div class="card"><h3>end</h3><p>Nodo terminal que finaliza la conversación. No puede tener aristas de salida.</p></div>
+  </div>
+  <div class="accordion">
+    <div class="acc-item open">
+      <button class="acc-head"><span>Crear un nodo<span class="acc-tag">6.3</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <ol class="step-list">
+          <li>Seleccione el flujo y la versión deseada en los selectores superiores.</li>
+          <li>Navegue al módulo "Nodos" en el menú lateral.</li>
+          <li>Haga clic en el botón "Crear nodo".</li>
+          <li>Complete Key (identificador único, minúsculas con guiones bajos: solicitar_documento, validar_identidad), Display Name (nombre legible) y Type.</li>
+          <li>Haga clic en "Guardar". Requiere rol admin.</li>
+        </ol>
+      </div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-head"><span>Configuración por tipo de nodo<span class="acc-tag">6.4 a 6.9</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p><b style="color:var(--ink)">message:</b> se configura con message_template, el nombre de la plantilla asociada creada en el módulo de Plantillas.</p>
+        <p><b style="color:var(--ink)">input:</b> se configura mediante input_schema. Para selección de opciones: expected "choice_number" con un arreglo choices (key, label, value) y store con la clave de almacenamiento. Para texto validado: expected "regex" con pattern y store.</p>
+        <p><b style="color:var(--ink)">service:</b> se configura con action_config: mapeo de entrada (variables del payload que se envían), mapeo de salida (cómo se guarda el resultado), manejo de errores mediante una arista de error, y valores por defecto si el servicio no responde.</p>
+        <p><b style="color:var(--ink)">router:</b> la lógica se define en las aristas de salida, cada una con un match_type y match_value evaluado contra el payload; se recomienda una arista con match_type "any" como camino por defecto.</p>
+        <p><b style="color:var(--ink)">subflow:</b> en action_config se referencia el flujo objetivo; al llegar a este nodo el bot ejecuta el subflujo completo y retorna al principal.</p>
+        <p><b style="color:var(--ink)">end:</b> es terminal (is_terminal: true); en action_config se puede configurar un close_reason para registrar por qué terminó la conversación.</p>
+      </div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-head"><span>Editar, eliminar y variables del payload<span class="acc-tag">6.10 a 6.11</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p>Para editar: en la lista de Nodos, clic sobre el nodo, se abre el formulario con los datos actuales, se realizan los cambios y se guarda. Cada edición queda registrada automáticamente en auditoría con los valores anteriores y posteriores.</p>
+        <p style="margin-top:0.5rem;">La eliminación de nodos ocurre en cascada al eliminar una versión de flujo completa; los nodos individuales también pueden eliminarse desde la interfaz si el rol lo permite.</p>
+        <p style="margin-top:0.5rem;">Los nodos usan variables dinámicas con sintaxis <b style="color:var(--ink)">{{variable}}</b>, reemplazadas en tiempo de ejecución con los valores del payload: por ejemplo {{documento}}, {{nombre}} u {{opcion_seleccionada}}.</p>
+      </div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- 6. GESTION DE ARISTAS -->
+<section class="section" id="s6" data-label="Gestión de aristas">
+  <div class="eyebrow-num">06 · Gestión de aristas (edges)</div>
+  <h2>El camino de la conversación se decide por prioridad</h2>
+  <p class="kicker">Cuando un nodo termina, el sistema revisa sus aristas de salida ordenadas por prioridad (menor número, mayor prioridad) y usa la primera que coincida.</p>
+  <div class="section-scroll">
+  <table class="limits" style="margin-top:1.6rem;">
+    <thead><tr><th>Tipo de coincidencia</th><th>Descripción</th><th>Ejemplo de match_value</th></tr></thead>
+    <tbody>
+      <tr><td>any</td><td>Coincide siempre, sin importar la entrada del usuario.</td><td class="v">null o vacío</td></tr>
+      <tr><td>equals</td><td>Coincide solo si la entrada es exactamente igual al valor.</td><td class="v">"1"</td></tr>
+      <tr><td>contains</td><td>Coincide si la entrada contiene la subcadena indicada.</td><td class="v">"ayuda"</td></tr>
+      <tr><td>regex</td><td>Coincide si la entrada cumple el patrón de expresión regular.</td><td class="v">^[0-9]{6,10}$</td></tr>
+      <tr><td>numeric_range</td><td>Coincide si el valor numérico está en el rango especificado.</td><td class="v">&gt;18, &lt;65</td></tr>
+      <tr><td>ends_with</td><td>Coincide si la entrada termina con el sufijo indicado.</td><td class="v">@fna.gov.co</td></tr>
+    </tbody>
+  </table>
+  <div class="accordion">
+    <div class="acc-item open">
+      <button class="acc-head"><span>Crear una arista<span class="acc-tag">7.3</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <ol class="step-list">
+          <li>Navegue al módulo "Aristas" y seleccione flujo y versión.</li>
+          <li>Haga clic en "Crear arista".</li>
+          <li>Seleccione el nodo origen (from_node_key) y el nodo destino (to_node_key).</li>
+          <li>Elija el tipo de coincidencia (match_type) y el valor de coincidencia (match_value).</li>
+          <li>Defina la prioridad (priority); el valor por defecto es 100, y los números menores tienen mayor prioridad.</li>
+          <li>Haga clic en "Guardar". Requiere rol admin.</li>
+        </ol>
+      </div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-head"><span>set_vars y arista de error<span class="acc-tag">7.4 a 7.5</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p>Las aristas pueden definir <b style="color:var(--ink)">set_vars</b>: un objeto JSON con pares clave-valor que se almacenan en el payload cuando la transición se activa, útil para registrar la opción seleccionada o marcar indicadores.</p>
+        <p style="margin-top:0.5rem;">En los nodos service es recomendable configurar siempre una <b style="color:var(--ink)">arista de error</b> con match_type "any" y prioridad alta, como respaldo si la llamada al servicio falla.</p>
+      </div></div>
+    </div>
+  </div>
+  <p style="font-size:0.82rem;color:var(--slate);margin-top:1.2rem;">Eliminar una arista puede dejar nodos sin conexión. Verifica el grafo después de eliminar para asegurarte de que el flujo siga siendo válido.</p>
+  </div>
+</section>
+
+<!-- 7. GESTION DE PLANTILLAS -->
+<section class="section" id="s7" data-label="Gestión de plantillas">
+  <div class="eyebrow-num">07 · Gestión de plantillas</div>
+  <h2>El texto que el usuario realmente lee</h2>
+  <div class="section-scroll">
+  <div class="grid-2" style="margin-top:1.6rem;">
+    <div class="card"><h3>Qué define una plantilla</h3><p>Nombre (identificador único referenciado desde nodos message), nombre visible, idioma (por defecto "es") y contenido, con soporte para variables dinámicas {{variable}}.</p></div>
+    <div class="card"><h3>Ejemplo con variables</h3><p>"Hola {{nombre}}, tu número de documento {{documento}} ha sido verificado exitosamente. Tu próxima cita está programada para el {{fecha_cita}}."</p></div>
+  </div>
+  <div class="accordion">
+    <div class="acc-item open">
+      <button class="acc-head"><span>Crear o editar una plantilla<span class="acc-tag">8.2</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <ol class="step-list">
+          <li>Navegue al módulo "Plantillas" en el menú lateral.</li>
+          <li>Haga clic en "Crear plantilla".</li>
+          <li>Complete el nombre (minúsculas con guiones bajos, ej. bienvenida_principal), el nombre visible, el idioma y el contenido del mensaje.</li>
+          <li>Haga clic en "Guardar". Requiere rol admin.</li>
+        </ol>
+      </div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-head"><span>Gestión de imágenes<span class="acc-tag">8.4</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p><b style="color:var(--ink)">Subir:</b> formatos permitidos JPEG, PNG, GIF y WebP, con un tamaño máximo de 5 MB por archivo. Al cargarla, el sistema devuelve una URL para incluir en el contenido de la plantilla.</p>
+        <p style="margin-top:0.5rem;"><b style="color:var(--ink)">Eliminar:</b> requiere rol admin y borra la imagen del almacenamiento de forma permanente.</p>
+      </div></div>
+    </div>
+  </div>
+  <p style="font-size:0.86rem;color:var(--slate);margin-top:1.2rem;">Las plantillas se vinculan a los nodos message a través de message_template, y también se usan en mensajes de error, de timeout de sesión y de confirmación o cierre.</p>
+  </div>
+</section>
+
+<!-- 8. CONFIGURACION DEL FLUJO -->
+<section class="section" id="s8" data-label="Configuración (Settings)">
+  <div class="eyebrow-num">08 · Configuración del flujo</div>
+  <h2>Cada versión tiene sus propios parámetros</h2>
+  <p class="kicker">Los parámetros se almacenan como pares clave-valor independientes por versión de flujo.</p>
+  <table class="limits" style="margin-top:1.6rem;">
+    <thead><tr><th>Parámetro</th><th>Descripción</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td>session_timeout_minutes</td><td>Tiempo máximo de inactividad antes de cerrar la sesión automáticamente.</td><td class="v">"15"</td></tr>
+      <tr><td>max_retries</td><td>Número máximo de reintentos permitidos cuando el usuario ingresa una entrada inválida.</td><td class="v">"3"</td></tr>
+      <tr><td>error_message_template</td><td>Plantilla de mensaje que se muestra cuando ocurre un error inesperado.</td><td class="v">"error_general"</td></tr>
+      <tr><td>default_language</td><td>Idioma predeterminado para las plantillas del flujo.</td><td class="v">"es"</td></tr>
+      <tr><td>enable_analytics</td><td>Habilita o deshabilita el registro de analíticas para esta versión.</td><td class="v">"true"</td></tr>
+      <tr><td>webhook_url</td><td>URL de callback para eventos del bot.</td><td class="v">https://api.fna.gov.co/webhooks</td></tr>
+    </tbody>
+  </table>
+  <div class="grid-2" style="margin-top:1.4rem;">
+    <div class="card"><h3>Timeout de sesión</h3><p>Al alcanzar session_timeout_minutes, el sistema envía un mensaje preguntando si el usuario desea continuar. Si no responde, envía un mensaje de cierre y marca la sesión como cerrada con motivo "timeout".</p></div>
+    <div class="card"><h3>Modo básico y modo avanzado</h3><p><b style="color:var(--ink)">Básico:</b> campos amigables con valores sugeridos, recomendado para la mayoría. <b style="color:var(--ink)">Avanzado (JSON):</b> edición directa en formato JSON, útil para configuraciones complejas.</p></div>
+  </div>
+  <p style="font-size:0.82rem;color:var(--slate-2);margin-top:1rem;">Los cambios en la configuración solo aplican a la versión seleccionada; si se necesitan los mismos parámetros en otra versión, deben configurarse individualmente.</p>
+</section>
+
+<!-- 9. VISUALIZACION DEL GRAFO -->
+<section class="section" id="s9" data-label="Visualización del grafo">
+  <div class="eyebrow-num">09 · Visualización del grafo</div>
+  <h2>Todo el flujo, en un solo diagrama</h2>
+  <div class="grid-3" style="margin-top:1.8rem;">
+    <div class="card"><h3>Qué muestra</h3><p>Nodos como rectángulos con su nombre visible y tipo (cada tipo con un color distinto), y aristas como flechas dirigidas con su tipo de coincidencia y valor.</p></div>
+    <div class="card"><h3>Nodo inicial y terminales</h3><p>El nodo inicial suele ser "start" o el primer nodo del flujo. Los nodos terminales (tipo end) se identifican visualmente como puntos finales.</p></div>
+    <div class="card"><h3>Interacción</h3><p>Zoom con la rueda del ratón, pan arrastrando el lienzo, ajuste automático a la pantalla, y exportación de la estructura completa en formato JSON.</p></div>
+  </div>
+  <p style="font-size:0.86rem;color:var(--slate);margin-top:1.2rem;max-width:640px;">El grafo se genera automáticamente a partir de los nodos y aristas configurados. Cualquier cambio en la estructura se refleja al recargarlo.</p>
+</section>
+
+<!-- 10. ACTIVACION Y PUBLICACION -->
+<section class="section" id="s10" data-label="Activación y publicación">
+  <div class="eyebrow-num">10 · Activación y publicación</div>
+  <h2>Publicar una versión afecta a usuarios reales</h2>
+  <p class="kicker">Solo una versión por flujo puede estar activa a la vez. Requiere rol admin.</p>
+  <div class="section-scroll">
+  <div class="accordion">
+    <div class="acc-item open">
+      <button class="acc-head"><span>Proceso de activación<span class="acc-tag">11.2</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <ol class="step-list">
+          <li>Seleccione el flujo y la versión que desea activar.</li>
+          <li>Navegue al módulo de activación o use la opción "Activar" en la interfaz.</li>
+          <li>Confirme la activación.</li>
+        </ol>
+        <p style="margin-top:0.5rem;">Al activar: la versión cambia de "draft" a "published", se registra la fecha y hora (published_at), y cualquier versión antes publicada del mismo flujo pasa automáticamente a "archived". Los nuevos usuarios usan de inmediato la versión recién publicada.</p>
+      </div></div>
+    </div>
+  </div>
+  <div class="grid-2" style="margin-top:1.4rem;">
+    <div class="card"><h3>Impacto en usuarios de WhatsApp</h3><p>Las conversaciones en curso continúan con la versión anterior hasta finalizar su sesión. Las nuevas conversaciones usan la versión recién activada de inmediato. No hay marcha atrás automática: para revertir hay que activar manualmente una versión anterior o crear una corregida.</p></div>
+    <div class="card"><h3>Antes de activar, verificar</h3><p>Todos los nodos conectados mediante aristas (revisar el grafo), las plantillas referenciadas existentes y correctas, los nodos service con sus mapeos configurados, al menos un nodo end, los parámetros establecidos, y pruebas internas realizadas.</p></div>
+  </div>
+  <p style="font-size:0.82rem;color:var(--slate-2);margin-top:1rem;">Se recomienda activar en horarios de bajo tráfico para minimizar el impacto si se detecta algún problema.</p>
+  </div>
+</section>
+
+<!-- 11. AUDITORIA -->
+<section class="section" id="s11" data-label="Auditoría">
+  <div class="eyebrow-num">11 · Auditoría</div>
+  <h2>Quién cambió qué, cuándo y cómo se conversó</h2>
+  <div class="section-scroll">
+  <p class="kicker" style="margin-top:0.6rem;">Cada creación, modificación o eliminación de un nodo, arista, plantilla o configuración genera automáticamente un registro de auditoría. Requiere rol admin, salvo la consulta de conversaciones.</p>
+  <table class="limits" style="margin-top:1.4rem;">
+    <thead><tr><th>Filtro</th><th>Descripción</th><th>Valores posibles</th></tr></thead>
+    <tbody>
+      <tr><td>Tipo de entidad</td><td>Filtra por el tipo de objeto modificado.</td><td class="v">node, edge, flow, setting, template</td></tr>
+      <tr><td>Acción</td><td>Filtra por el tipo de operación realizada.</td><td class="v">create, update, delete</td></tr>
+      <tr><td>Usuario</td><td>Filtra por el administrador que realizó el cambio.</td><td class="v">correo electrónico</td></tr>
+      <tr><td>Fecha inicio / fin</td><td>Límites del rango de fechas.</td><td class="v">AAAA-MM-DD</td></tr>
+    </tbody>
+  </table>
+  <div class="grid-2" style="margin-top:1.4rem;">
+    <div class="card"><h3>Qué muestra cada registro</h3><p>Fecha y hora, usuario, acción, tipo de entidad, datos anteriores (before_data) y datos posteriores (after_data): suficiente para rastrear exactamente qué cambió, quién y cuándo.</p></div>
+    <div class="card"><h3>Consulta de conversaciones</h3><p>La pestaña "Conversaciones" muestra ID, teléfono, estado (active o closed), nodo actual, payload y último mensaje. Se puede filtrar por estado, teléfono, ID y rango de fechas.</p></div>
+  </div>
+  <div class="accordion">
+    <div class="acc-item">
+      <button class="acc-head"><span>Historial de eventos y forzar cierre<span class="acc-tag">12.5 a 12.6</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <p>La línea de tiempo de una conversación registra cuatro tipos de evento: <b style="color:var(--ink)">transition</b> (avance de un nodo a otro), <b style="color:var(--ink)">incoming_message</b> (mensaje del usuario), <b style="color:var(--ink)">outgoing_message</b> (mensaje del bot) y <b style="color:var(--ink)">session_lifecycle</b> (inicio, reinicio o cierre de sesión).</p>
+        <ol class="step-list" style="margin-top:0.8rem;">
+          <li>En la lista de conversaciones, identifique la conversación activa que desea cerrar.</li>
+          <li>Haga clic en "Forzar cierre".</li>
+          <li>Confirme la acción.</li>
+        </ol>
+        <p style="margin-top:0.4rem;">La sesión pasa a "closed", se registra un evento transition con destino ADMIN_FORCE_CLOSE, y el motivo queda como "admin_force_close" en el payload. Úsalo solo cuando sea estrictamente necesario, por ejemplo si una conversación quedó atascada en un bucle.</p>
+      </div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- 12. REPORTES -->
+<section class="section" id="s12" data-label="Reportes">
+  <div class="eyebrow-num">12 · Reportes</div>
+  <h2>Un dashboard operativo del bot</h2>
+  <div class="section-scroll">
+  <div class="grid-3" style="margin-top:1.6rem;">
+    <div class="card"><h3>Acceso de usuarios</h3><p>Tendencia diaria de usuarios que interactúan con el bot, discriminados por afiliados y nuevos.</p></div>
+    <div class="card"><h3>Finalización de flujos</h3><p>Por cada flujo: total de conversaciones, completadas, abandonadas, cerradas y transferidas a agente humano (handoff).</p></div>
+    <div class="card"><h3>Funcionalidades más usadas</h3><p>Ranking de los 10 flujos o funcionalidades más consultados por los usuarios.</p></div>
+    <div class="card"><h3>Horas pico</h3><p>Distribución de conversaciones por hora del día (0 a 23h), útil para identificar momentos de mayor demanda.</p></div>
+    <div class="card"><h3>Distribución geográfica</h3><p>Cantidad de sesiones agrupadas por departamento o región del usuario.</p></div>
+    <div class="card"><h3>Filtros del dashboard</h3><p>Rango de fechas y tipo de usuario: todos, afiliados o nuevos.</p></div>
+  </div>
+  <div class="accordion">
+    <div class="acc-item open">
+      <button class="acc-head"><span>Exportar reportes a Excel<span class="acc-tag">13.3</span></span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner">
+        <ol class="step-list">
+          <li>Configure los filtros deseados (fechas, tipo de usuario).</li>
+          <li>Haga clic en "Exportar a Excel".</li>
+          <li>El sistema genera un .xlsx con tres hojas: Reporte Operaciones (detalle diario por flujo y estado), Consolidado (totales acumulados por flujo) e Ingresos por Identificación, opcional (sesiones individuales con usuario, fecha, hora y servicio).</li>
+          <li>El archivo se descarga automáticamente en el navegador.</li>
+        </ol>
+        <p style="margin-top:0.4rem;">Todos los reportes usan la zona horaria de Colombia (America/Bogota). Los reportes grandes pueden tardar unos segundos en generarse.</p>
+      </div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- 13. NAVEGACION DEL PANEL -->
+<section class="section" id="s13" data-label="Navegación del panel">
+  <div class="eyebrow-num">13 · Navegación del panel</div>
+  <h2>Ocho módulos en el menú lateral</h2>
+  <table class="domain">
+    <thead><tr><th>Módulo</th><th>Ruta</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td>Plantillas</td><td class="n">/templates</td><td>Gestión de plantillas de mensajes y carga de imágenes.</td></tr>
+      <tr><td>Nodos</td><td class="n">/nodes</td><td>Creación y configuración de nodos del flujo.</td></tr>
+      <tr><td>Aristas</td><td class="n">/edges</td><td>Gestión de conexiones entre nodos.</td></tr>
+      <tr><td>Grafo</td><td class="n">/graph</td><td>Visualización interactiva del flujo completo.</td></tr>
+      <tr><td>Configuración</td><td class="n">/settings</td><td>Parámetros de comportamiento del flujo.</td></tr>
+      <tr><td>Auditoría</td><td class="n">/audit</td><td>Log de cambios y consulta de conversaciones.</td></tr>
+      <tr><td>Reportes</td><td class="n">/reports</td><td>Dashboard de métricas y exportación a Excel.</td></tr>
+      <tr><td>Activación</td><td class="n">/activation</td><td>Publicación de versiones de flujo.</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.82rem;color:var(--slate-2);margin-top:0.9rem;">El menú lateral incluye también cerrar sesión, que invalida los tokens de acceso y redirige a la pantalla de inicio de sesión.</p>
+</section>
+
+<!-- 14. PREGUNTAS FRECUENTES -->
+<section class="section" id="s14" data-label="Preguntas frecuentes">
+  <div class="eyebrow-num">14 · Preguntas frecuentes</div>
+  <h2>Lo que suele preguntar el equipo operativo</h2>
+  <div class="section-scroll">
+  <div class="accordion">
+    <div class="acc-item open">
+      <button class="acc-head"><span>¿Puedo editar una versión de flujo ya publicada?</span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner"><p>No se recomienda. Cree una nueva versión (draft), realice los cambios y actívela. Esto garantiza trazabilidad y la posibilidad de revertir.</p></div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-head"><span>¿Qué sucede si activo una versión con errores?</span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner"><p>Las conversaciones nuevas usarán la versión con errores. Para corregir, active rápidamente una versión anterior o cree y active una versión corregida.</p></div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-head"><span>¿Puedo tener más de un flujo activo al mismo tiempo?</span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner"><p>Sí. Se pueden tener múltiples flujos activos simultáneamente; la restricción es que solo una versión por flujo puede estar publicada.</p></div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-head"><span>¿Cómo sé quién modificó un nodo?</span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner"><p>Consulte el módulo de Auditoría filtrando por tipo de entidad "node" y el rango de fechas deseado. El registro muestra el correo del usuario que hizo el cambio.</p></div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-head"><span>¿Qué pasa si una variable {{variable}} no existe en el payload?</span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner"><p>Se muestra tal cual, sin reemplazo. Hay que asegurarse de que los nodos anteriores capturen o generen las variables necesarias.</p></div></div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-head"><span>¿Puedo ver las conversaciones en tiempo real?</span><span class="plus">+</span></button>
+      <div class="acc-body"><div class="acc-body-inner"><p>Sí, la pestaña "Conversaciones" del módulo de Auditoría muestra las sesiones activas con su estado actual y último mensaje. La lista se puede refrescar para ver actualizaciones.</p></div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- 15. ANEXOS -->
+<section class="section" id="s15" data-label="Anexos">
+  <div class="eyebrow-num">15 · Anexos</div>
+  <h2>El flujo de trabajo completo, y el glosario técnico</h2>
+  <div class="section-scroll">
+  <h3 style="margin-bottom:0.8rem;">Anexo A · Flujo de trabajo típico</h3>
+  <ol class="step-list">
+    <li>Crear o seleccionar un flujo existente.</li>
+    <li>Crear una nueva versión (draft) del flujo.</li>
+    <li>Diseñar los nodos: message, input, service, router, subflow, end.</li>
+    <li>Configurar las aristas entre nodos con sus condiciones de transición.</li>
+    <li>Crear las plantillas de mensajes necesarias con las variables adecuadas.</li>
+    <li>Ajustar los parámetros de configuración: timeout, reintentos, entre otros.</li>
+    <li>Verificar el flujo en el visor de grafo.</li>
+    <li>Activar la versión para producción.</li>
+    <li>Monitorear las conversaciones y métricas en el módulo de Reportes.</li>
+    <li>Consultar la auditoría para trazabilidad de cambios.</li>
+  </ol>
+  <h3 style="margin:2rem 0 0.9rem 0;">Anexo B · Glosario técnico</h3>
+  <div class="gloss-search">
+    <input type="text" id="glossInput" placeholder="Buscar un término (ej: JWT, payload, handoff)...">
+    <div class="gloss-count" id="glossCount">8 términos</div>
+  </div>
+  <div class="gloss-grid" id="glossGrid"></div>
+  </div>
+</section>
+
+<!-- 16. CIERRE -->
+<section class="section dark" id="s16" data-label="Resumen ejecutivo">
+  <div class="eyebrow-num">16 · Resumen ejecutivo</div>
+  <h2>En síntesis</h2>
+  <div class="closing-grid">
+    <ul>
+      <li><b>01</b> El panel gestiona flujos conversacionales completos: nodos, aristas, plantillas y configuración, con dos roles (admin y viewer).</li>
+      <li><b>02</b> Ningún cambio afecta producción directamente: siempre se trabaja sobre una nueva versión en estado draft.</li>
+      <li><b>03</b> Activar una versión archiva automáticamente la anterior. Las conversaciones en curso terminan con la versión con la que empezaron.</li>
+      <li><b>04</b> Seis tipos de nodo cubren todo el ciclo: mensaje, entrada, servicio, enrutador, subflujo y cierre.</li>
+    </ul>
+    <ul>
+      <li><b>05</b> Las aristas deciden el camino por prioridad, con seis tipos de coincidencia disponibles.</li>
+      <li><b>06</b> Toda modificación queda auditada con datos anteriores y posteriores, trazable por usuario y fecha.</li>
+      <li><b>07</b> El dashboard de Reportes y la exportación a Excel dan visibilidad operativa diaria del bot.</li>
+      <li><b>08</b> Sesión con tokens JWT: acceso de 15 minutos, refresco de 7 días.</li>
+    </ul>
+  </div>
+  <div class="footer-src">
+    Fuente: Manual de Usuario, Panel de Administración BFF WhatsApp FNA. Código PRO-DIT-MN-ADMIN-WA · Versión 1.0 · 10 de marzo de 2026. Proceso: Atención al Ciudadano y Canales Digitales.
+  </div>
+</section>
+<!-- 17. EVALUACION -->
+<section class="section" id="s17" data-label="Evaluación">
+  <div class="eyebrow-num">17 · Evaluación</div>
+  <h2>Pon a prueba lo que acabas de ver</h2>
+  <p class="kicker">20 preguntas de opción múltiple sobre roles, flujos, nodos, aristas y auditoría del Panel de Administración. Selecciona una respuesta para ver la retroalimentación.</p>
+  <div class="quiz-wrap" id="quizWrap">
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
+    <div class="quiz-meta"><span id="quizCounter">Pregunta 1 de 20</span><span id="quizScore">Aciertos: 0</span></div>
+    <div class="quiz-card" id="quizCard"></div>
+    <div class="quiz-nav">
+      <button class="quiz-btn" id="quizNextBtn" disabled>Siguiente</button>
+      <button class="quiz-btn ghost" id="quizRestartBtn" style="display:none;">Reiniciar evaluación</button>
+    </div>
+  </div>
+</section>
+
+<script>
+const sections = Array.from(document.querySelectorAll('.section'));
+const dotnav = document.getElementById('dotnav');
+sections.forEach((s)=>{
+  const btn = document.createElement('button');
+  btn.innerHTML = `<span class="lbl">${s.dataset.label}</span><span class="dot"></span>`;
+  btn.addEventListener('click',()=>s.scrollIntoView({behavior:'smooth'}));
+  dotnav.appendChild(btn);
+});
+const dotButtons = Array.from(dotnav.children);
+const chapterBadge = document.getElementById('chapterBadge');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const idx = sections.indexOf(e.target);
+      dotButtons.forEach(b=>b.classList.remove('active'));
+      dotButtons[idx].classList.add('active');
+      chapterBadge.textContent = e.target.dataset.label;
+    }
+  });
+},{threshold:0.5});
+sections.forEach(s=>io.observe(s));
+
+window.addEventListener('scroll',()=>{
+  const h = document.documentElement;
+  const pct = (h.scrollTop)/(h.scrollHeight-h.clientHeight)*100;
+  document.getElementById('progressFill').style.width = pct+'%';
+});
+
+const counters = document.querySelectorAll('[data-count]');
+const counterIO = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el = e.target;
+      const target = parseInt(el.dataset.count,10);
+      let cur = 0;
+      const step = Math.max(1,Math.round(target/40));
+      const t = setInterval(()=>{
+        cur += step;
+        if(cur>=target){cur=target;clearInterval(t);}
+        el.textContent = cur;
+      },22);
+      counterIO.unobserve(el);
+    }
+  });
+},{threshold:0.6});
+counters.forEach(c=>counterIO.observe(c));
+
+document.querySelectorAll('.card, .role-pill, .gap-card, .acc-item').forEach(el=>el.classList.add('reveal'));
+const revealIO = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in-view');
+      revealIO.unobserve(e.target);
+    }
+  });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>revealIO.observe(el));
+
+document.querySelectorAll('.acc-head').forEach(h=>{
+  h.addEventListener('click',()=>h.parentElement.classList.toggle('open'));
+});
+
+const flowData = {
+  draft:{t:"draft (borrador)",d:"Versión en desarrollo, no visible para los usuarios de WhatsApp. Se trabaja libremente: se agregan nodos, se configuran aristas, se ajustan plantillas y parámetros."},
+  published:{t:"published (publicada)",d:"Versión activa en producción, utilizada por los usuarios reales. Al publicarla se registra la fecha y hora (published_at) y la versión antes publicada del mismo flujo pasa automáticamente a archived."},
+  archived:{t:"archived (archivada)",d:"Versión anterior que fue reemplazada por una nueva publicación. Queda disponible como historial y se puede reactivar manualmente si es necesario revertir."}
+};
+const flowNodes = document.querySelectorAll('.flow-node');
+const flowDetail = document.getElementById('flowDetail');
+function paintFlow(key){
+  flowNodes.forEach(n=>n.classList.toggle('active', n.dataset.state===key));
+  const d = flowData[key];
+  flowDetail.querySelector('.ft').textContent = d.t;
+  flowDetail.querySelector('p').textContent = d.d;
+}
+flowNodes.forEach(n=>n.addEventListener('click',()=>paintFlow(n.dataset.state)));
+
+const glossary = [
+["JWT","JSON Web Token. Estándar de autenticación basado en tokens firmados digitalmente."],
+["API","Application Programming Interface. Interfaz de comunicación entre sistemas."],
+["BFF","Backend For Frontend. Capa de servidor diseñada específicamente para servir a una interfaz de usuario."],
+["Payload","Conjunto de datos de sesión que viajan y se transforman durante la ejecución del flujo."],
+["Regex","Expresión regular. Patrón de texto utilizado para validar formatos de entrada."],
+["Webhook","URL de callback que recibe notificaciones automáticas cuando ocurren eventos."],
+["Handoff","Transferencia de la conversación del bot a un agente humano."],
+["CRUD","Create, Read, Update, Delete. Operaciones básicas de gestión de datos."]
+];
+const glossGrid = document.getElementById('glossGrid');
+const glossCount = document.getElementById('glossCount');
+glossary.sort((a,b)=>a[0].localeCompare(b[0],'es')).forEach(([t,d])=>{
+  const el = document.createElement('div');
+  el.className = 'gloss-item';
+  el.innerHTML = `<div class="gt">${t}</div><div class="gd">${d}</div>`;
+  el.dataset.search = (t+' '+d).toLowerCase();
+  glossGrid.appendChild(el);
+});
+document.getElementById('glossInput').addEventListener('input',(e)=>{
+  const q = e.target.value.toLowerCase().trim();
+  let visible = 0;
+  document.querySelectorAll('.gloss-item').forEach(el=>{
+    const match = el.dataset.search.includes(q);
+    el.classList.toggle('hidden', !match);
+    if(match) visible++;
+  });
+  glossCount.textContent = `${visible} término${visible===1?'':'s'}`;
+});
+glossCount.textContent = `${glossary.length} términos`;
+
+const quizData = [
+{q:"¿Qué protocolo de autenticación utiliza el Panel de Administración?", opts:["OAuth2 con PKCE","JWT (JSON Web Token)","Basic Auth","API Key estática"], correct:1, exp:"El sistema utiliza autenticación basada en tokens JWT, con un token de acceso y un token de refresco."},
+{q:"¿Cuánto dura el token de acceso (access_token)?", opts:["5 minutos","15 minutos","1 hora","24 horas"], correct:1, exp:"El token de acceso dura 15 minutos y se renueva automáticamente usando el token de refresco."},
+{q:"¿Cuánto dura el token de refresco (refresh_token)?", opts:["1 día","7 días","30 días","90 días"], correct:1, exp:"El token de refresco dura 7 días. Si la sesión permanece inactiva ese tiempo, el usuario debe iniciar sesión de nuevo."},
+{q:"¿Qué rol puede activar versiones de flujo?", opts:["Solo el rol viewer","Solo el rol admin","Ambos roles por igual","Ningún rol, es automático"], correct:1, exp:"Activar versiones de flujo, junto con crear o editar flujos, nodos, aristas y plantillas, requiere el rol admin."},
+{q:"¿Qué puede hacer el rol viewer sin restricciones?", opts:["Crear nodos y aristas","Consultar conversaciones y visualizar reportes","Configurar parámetros del flujo","Forzar el cierre de conversaciones"], correct:1, exp:"El rol viewer puede visualizar flujos, consultar conversaciones, ver reportes y exportarlos a Excel, pero no puede crear, editar ni activar."},
+{q:"¿Qué representa una versión de flujo en estado draft?", opts:["Una versión ya visible para los usuarios de WhatsApp","Una versión en desarrollo, no visible para los usuarios","Una versión archivada tras ser reemplazada","Una versión con errores de configuración"], correct:1, exp:"draft es el estado de una versión en desarrollo. Se vuelve published solo cuando se activa."},
+{q:"Al activar una nueva versión de un flujo, ¿qué ocurre con la versión antes publicada?", opts:["Se elimina permanentemente","Pasa automáticamente a estado archived","Permanece publicada junto con la nueva","Vuelve a estado draft"], correct:1, exp:"Cualquier versión anteriormente publicada del mismo flujo cambia automáticamente a estado archived al activar una nueva."},
+{q:"¿Qué tipo de nodo evalúa condiciones y dirige el flujo sin interactuar con el usuario?", opts:["message","input","router","service"], correct:2, exp:"El nodo router evalúa condiciones basadas en variables del payload y dirige la conversación por distintos caminos, sin enviar mensajes directamente."},
+{q:"¿Qué campo se usa para configurar un nodo de tipo message?", opts:["input_schema","action_config","message_template","match_value"], correct:2, exp:"El nodo message se configura con message_template, que referencia el nombre de una plantilla creada en el módulo de Plantillas."},
+{q:"¿Qué tipo de nodo es terminal y no puede tener aristas de salida?", opts:["subflow","end","router","input"], correct:1, exp:"El nodo end marca el final de la conversación, es terminal (is_terminal: true) y no puede tener aristas de salida."},
+{q:"¿Qué sintaxis se usa para referenciar variables del payload en nodos y plantillas?", opts:["${variable}","%variable%","{{variable}}","[[variable]]"], correct:2, exp:"Las variables dinámicas usan la sintaxis de doble llave: {{nombre_variable}}, reemplazada en tiempo de ejecución con los valores del payload."},
+{q:"¿Cómo se evalúan las aristas de salida de un nodo?", opts:["En orden alfabético por nombre","Por prioridad, siendo menor número mayor prioridad","De forma aleatoria","Todas se ejecutan simultáneamente"], correct:1, exp:"El sistema revisa las aristas de salida ordenadas por prioridad (menor número = mayor prioridad) y usa la primera que coincida."},
+{q:"¿Qué tipo de coincidencia (match_type) se usa como camino por defecto en un router?", opts:["equals","regex","any","ends_with"], correct:2, exp:"Se recomienda configurar una arista con match_type \"any\" como camino por defecto, ya que coincide siempre sin importar la entrada."},
+{q:"¿Para qué sirve set_vars en una arista?", opts:["Para definir el tipo de nodo destino","Para almacenar variables en el payload cuando se activa la transición","Para eliminar variables del payload","Para cambiar el idioma de la plantilla"], correct:1, exp:"set_vars permite definir, mediante un objeto JSON, variables que se almacenan en el payload de la sesión cuando la transición se activa."},
+{q:"¿Cuál es el tamaño máximo permitido para una imagen cargada en una plantilla?", opts:["1 MB","5 MB","10 MB","20 MB"], correct:1, exp:"El tamaño máximo permitido para imágenes en plantillas es de 5 MB, en formatos JPEG, PNG, GIF o WebP."},
+{q:"¿Qué parámetro de configuración controla el tiempo de inactividad antes de cerrar una sesión?", opts:["max_retries","session_timeout_minutes","default_language","enable_analytics"], correct:1, exp:"session_timeout_minutes define el tiempo máximo de inactividad antes de que el sistema cierre la sesión automáticamente."},
+{q:"¿Qué permite exportar el visor del grafo, además de visualizarlo?", opts:["Un archivo PDF del diagrama","La estructura completa en formato JSON","Un video de la conversación","Un reporte en Excel"], correct:1, exp:"El visor del grafo permite exportar la estructura completa del flujo en formato JSON para integración con otras herramientas."},
+{q:"¿Qué evento de auditoría registra que el usuario envió un mensaje?", opts:["transition","incoming_message","outgoing_message","session_lifecycle"], correct:1, exp:"incoming_message registra un mensaje enviado por el usuario; outgoing_message registra los mensajes del bot."},
+{q:"Al forzar el cierre de una conversación, ¿qué motivo queda registrado en el payload?", opts:["\"user_timeout\"","\"admin_force_close\"","\"error_critico\"","\"session_expired\""], correct:1, exp:"El motivo de cierre se registra como \"admin_force_close\" en el payload, junto con un evento transition hacia ADMIN_FORCE_CLOSE."},
+{q:"¿Qué zona horaria utilizan todos los reportes del panel?", opts:["UTC","America/Bogota","America/New_York","Hora del servidor sin especificar"], correct:1, exp:"Todos los reportes utilizan la zona horaria de Colombia (America/Bogota) para las fechas y horas."}
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false;
+const quizCard = document.getElementById('quizCard');
+const quizCounter = document.getElementById('quizCounter');
+const quizScoreLbl = document.getElementById('quizScore');
+const quizNextBtn = document.getElementById('quizNextBtn');
+const quizRestartBtn = document.getElementById('quizRestartBtn');
+const quizProgressFill = document.getElementById('quizProgressFill');
+const letters = ['A','B','C','D'];
+
+function renderQuiz(){
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  quizCounter.textContent = `Pregunta ${quizIndex+1} de ${quizData.length}`;
+  quizScoreLbl.textContent = `Aciertos: ${quizScore}`;
+  quizProgressFill.style.width = `${((quizIndex)/quizData.length)*100}%`;
+  quizNextBtn.disabled = true;
+  quizNextBtn.textContent = quizIndex === quizData.length-1 ? 'Ver resultado' : 'Siguiente';
+  const optsHtml = item.opts.map((o,i)=>`<button class="quiz-option" data-i="${i}"><span class="qletter">${letters[i]}</span><span>${o}</span></button>`).join('');
+  quizCard.innerHTML = `<div class="quiz-question">${item.q}</div><div class="quiz-options">${optsHtml}</div><div class="quiz-explain" id="quizExplain" style="display:none;"></div>`;
+  quizCard.querySelectorAll('.quiz-option').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(quizAnswered) return;
+      quizAnswered = true;
+      const chosen = parseInt(btn.dataset.i,10);
+      const correct = item.correct;
+      quizCard.querySelectorAll('.quiz-option').forEach(b=>{
+        b.classList.add('disabled');
+        const bi = parseInt(b.dataset.i,10);
+        if(bi === correct) b.classList.add('correct');
+        else if(bi === chosen) b.classList.add('incorrect');
+      });
+      if(chosen === correct) quizScore++;
+      quizScoreLbl.textContent = `Aciertos: ${quizScore}`;
+      const exp = document.getElementById('quizExplain');
+      exp.style.display = 'block';
+      exp.innerHTML = `<b>${chosen===correct ? 'Correcto.' : 'No exactamente.'}</b> ${item.exp}`;
+      quizNextBtn.disabled = false;
+    });
+  });
+}
+
+quizNextBtn.addEventListener('click',()=>{
+  if(quizIndex < quizData.length-1){
+    quizIndex++;
+    renderQuiz();
+  } else {
+    quizProgressFill.style.width = '100%';
+    quizCounter.textContent = 'Evaluación completada';
+    const pct = Math.round((quizScore/quizData.length)*100);
+    let msg = 'Vale la pena repasar los tipos de nodo y el proceso de activación antes de la sesión con el cliente.';
+    if(pct >= 90) msg = 'Dominas el manual a fondo. Listo para la sesión con el cliente.';
+    else if(pct >= 70) msg = 'Buen nivel general. Repasa los puntos que fallaste antes de presentar.';
+    quizCard.innerHTML = `<div class="quiz-result"><div class="score-num">${quizScore} / ${quizData.length}</div><div class="score-lab">${pct}% de aciertos</div><div class="score-msg">${msg}</div></div>`;
+    quizNextBtn.style.display = 'none';
+    quizRestartBtn.style.display = 'inline-block';
+  }
+});
+quizRestartBtn.addEventListener('click',()=>{
+  quizIndex = 0; quizScore = 0;
+  quizNextBtn.style.display = 'inline-block';
+  quizRestartBtn.style.display = 'none';
+  renderQuiz();
+});
+renderQuiz();
+</script>
+</body>
+</html>
